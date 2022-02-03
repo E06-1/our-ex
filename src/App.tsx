@@ -8,8 +8,8 @@ import ActionBar from './components/ActionBar/ActionBar';
 function App() {
   return (
     <div className="App">
-      <EditingBar />
       <ActionBar/>
+      <EditingBar />
     </div>
   );
 }
