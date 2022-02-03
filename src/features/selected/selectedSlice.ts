@@ -14,10 +14,24 @@ export const selectedSlice = createSlice({
   initialState,
   reducers: {
     reset: (state) => initialState,
+    setSelected: (state, action: PayloadAction<CellName[] | CellName>) => {
+      if(Array.isArray(action.payload)){
+        return action.payload;
+      }else {
+        return [action.payload];
+      }
+    },
+    addSelected:  (state, action: PayloadAction<CellName[] | CellName>) => {
+      if(Array.isArray(action.payload)){
+        return [...state, ...action.payload];
+      }else {
+        return [...state, action.payload];
+      }
+    }
   },
 });
 
-export const { reset } = selectedSlice.actions;
+export const { reset, setSelected, addSelected } = selectedSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectSelectedCells = (state: RootState) => state.selected;
