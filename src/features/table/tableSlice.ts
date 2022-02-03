@@ -29,6 +29,6 @@ export const tableSlice = createSlice({
 export const {reset, overwrite} = tableSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectCell = (cellName: CellName) => (state: RootState) => state.table[cellName]
+export const selectCell = (cellName: CellName) => (state: RootState) => state.table.present[cellName]
 
 export default tableSlice.reducer
