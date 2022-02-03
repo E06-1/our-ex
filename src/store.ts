@@ -2,13 +2,12 @@ import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import tableReducer from "./features/table/tableSlice";
 import selectedReducer from "./features/selected/selectedSlice";
-import historyReducer from "./features/history/historySlice";
+import undoable from "redux-undo";
 
 export const store = configureStore({
   reducer: {
-      table: tableReducer,
+      table: undoable(tableReducer),
       selected: selectedReducer,
-      history: historyReducer,
   },
 });
 
