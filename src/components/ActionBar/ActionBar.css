@@ -1,0 +1,6 @@
+.actionBarContainer {
+  padding: 10px;
+  display: flex;
+  justify-content: space-around;
+  background-color: rgb(219, 248, 248);
+}
