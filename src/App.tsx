@@ -6,11 +6,11 @@ import Grid from "./components/Grid/Grid";
 import { useAppDispatch } from "./store";
 import { mergeCellStyle, setCellStyle } from "./features/table/tableSlice";
 import { useSelector } from "react-redux";
-import { selectSelectedCells } from "./features/selected/selectedSlice";
+import { selectSelectedCellNames } from "./features/selected/selectedSlice";
 import  Search  from "./components/Search/Search";
 function App() {
   const dispatch = useAppDispatch();
-  const selectedCells = useSelector(selectSelectedCells);
+  const selectedCells = useSelector(selectSelectedCellNames);
 
   return (
     <div className="App">

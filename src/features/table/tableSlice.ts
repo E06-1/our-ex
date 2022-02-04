@@ -85,6 +85,6 @@ export const { init, overwrite, setCellStyle, mergeCellStyle, setCellContent } =
 // Other code such as selectors can use the imported `RootState` type
 export const selectCell = (cellName: CellName) => (state: RootState) =>
   state.table.present[cellName];
-export const selectTable = (state: RootState) => state.table;
+export const selectPresentTable = (state: RootState) => state.table.present;
 
 export default tableSlice.reducer;
