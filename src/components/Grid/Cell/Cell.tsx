@@ -20,16 +20,19 @@ interface CellProps {
   onSelectionEnd: () => void;
 }
 
-function Cell({
-  cellname,
-  isSelected,
-  onRequestEditable,
-  isEditable,
-  onRequestFocus,
-  onSelectionStart,
-  onSelectionCorner,
-  onSelectionEnd,
-}: CellProps) {
+export default React.forwardRef(function Cell(
+  {
+    cellname,
+    isSelected,
+    onRequestEditable,
+    isEditable,
+    onRequestFocus,
+    onSelectionStart,
+    onSelectionCorner,
+    onSelectionEnd,
+  }: CellProps,
+  forwarRef
+) {
   const ref = useRef<HTMLDivElement>(null);
 
   const cellstate = useSelector(selectCell(cellname));
@@ -47,15 +50,16 @@ function Cell({
   }, [isEditable]);
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
-    switch(e.key){
+    switch (e.key) {
       case "Delete":
-        dispatch(setCellContent({cellname, content:""}))
+        dispatch(setCellContent({ cellname, content: "" }));
         break;
     }
-  }
+  };
 
   return (
     <div
+      id={cellname}
       className="Cell"
       style={{
         border: "1px solid lightgray",
@@ -67,23 +71,25 @@ function Cell({
       onClick={() => onRequestFocus(cellname)}
       onDoubleClick={() => onRequestEditable(cellname)}
       /* onDrag={() => console.log("onDrag")} */
-      onDragStart={() => onSelectionStart(cellname)}
+      onMouseDown={() => onSelectionStart(cellname)}
       onFocus={() => onRequestFocus(cellname)}
       contentEditable={isEditable}
       suppressContentEditableWarning
       ref={ref}
       tabIndex={0}
-      onDragEnter={(e) => {
+      onMouseEnter={(e) => {
         e.preventDefault();
         onSelectionCorner(cellname);
       }}
-      onDragEnd={() => onSelectionEnd()}
-      onDragOver={(e) => e.preventDefault()}
+      onMouseUp={() => onSelectionEnd()}
+      onDragOverCapture={(e) => e.preventDefault()}
+      draggable={false}
+      onDrag={(e) => e.preventDefault()}
+      onDragStart={(e) => e.preventDefault()}
+      onDragEnter={(e) => e.preventDefault()}
       onKeyDown={handleKeyDown}
     >
       {cellstate.content}
     </div>
   );
-}
-
-export default Cell;
+});
