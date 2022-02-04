@@ -4,18 +4,41 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { selectSelectedCells } from "../../../features/selected/selectedSlice";
+import tableSlice from "../../../features/table/tableSlice";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../store";
+import { mergeCellStyle } from "../../../features/table/tableSlice";
+
 import "./Font.css";
 
 export default function Font() {
+  const dispatch = useAppDispatch()
+  const selected = useSelector(selectSelectedCells)
+  
+
+  console.log(selected);
+  
+
   const [size, setSize] = React.useState("12");
   const [family, setFamily] = React.useState("Arial, Helvetica, sans-serif");
 
   const handleFontSize = (event: SelectChangeEvent) => {
     setSize(event.target.value);
+
+    dispatch(
+      mergeCellStyle({cellname: selected, style: {fontSize: `${event.target.value}px`} })
+    )
+
+
   };
 
   const handleFontFamily = (event: SelectChangeEvent) => {
     setFamily(event.target.value);
+
+    dispatch(
+      mergeCellStyle({cellname: selected, style: {fontFamily: `${event.target.value}`}})
+    )
   };
 
   return (
