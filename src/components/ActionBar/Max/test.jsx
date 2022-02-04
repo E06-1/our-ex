@@ -31,16 +31,13 @@ export default function Max() {
     //Only number array of selected cells
     const onlyNumValues = values.filter((item) => !Number.isNaN(item));
     //console.log("values are", onlyNumValues);
-    if (onlyNumValues.length === 0) return;
+
     //getting max value
     SetMaxValue(Math.max(...onlyNumValues));
-    console.log("num values", onlyNumValues);
-    console.log("max value", Math.max(...onlyNumValues));
   }, [selectedCells, waitingForSelection]);
 
   useEffect(() => {
     if (!maxValue) return;
-
     //setting in resultCell => content: MaxValue
     dispatch(setCellContent({ cellname: resultCell, content: maxValue }));
   }, [maxValue, dispatch, resultCell]);
