@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
-  selectSelectedCells,
+  selectSelectedCellNames,
   setSelected,
 } from "../../features/selected/selectedSlice";
 import {
   CellName,
   init,
-  selectTable,
+  selectPresentTable,
   setCellContent,
 } from "../../features/table/tableSlice";
 import { useAppDispatch } from "../../store";
@@ -25,8 +25,8 @@ function Grid({ rows, columns }: GridProps) {
   const [selectionCorner, setSelectionCorner] = useState<CellName | null>(null);
   const [newSelection, setNewSelection] = useState<CellName[]>([]);
 
-  const table = useSelector(selectTable);
-  const selectedCells = useSelector(selectSelectedCells);
+  const table = useSelector(selectPresentTable);
+  const selectedCells = useSelector(selectSelectedCellNames);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -65,7 +65,7 @@ function Grid({ rows, columns }: GridProps) {
         gridTemplateRows: `repeat(${rows}, 50px)`,
       }}
     >
-      {Object.keys(table.present).map((cellname, index) => (
+      {Object.keys(table).map((cellname, index) => (
         <Cell
           key={cellname}
           cellname={cellname as CellName}
