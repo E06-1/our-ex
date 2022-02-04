@@ -1,15 +1,13 @@
 import RestartAltIcon from "@mui/icons-material/RestartAlt";
 import Button from "@mui/material/Button";
 import { useAppDispatch } from "../../../store";
-import { setCellContent } from "../../../features/table/tableSlice";
-import { setCellStyle } from "../../../features/table/tableSlice";
-import tableSlice from "../../../features/table/tableSlice";
+import { reset } from "../../../features/table/tableSlice";
 
 export default function Reset() {
   const dispatch = useAppDispatch();
 
   return (
-    <Button variant="contained">
+    <Button variant="contained" onClick={() => dispatch(reset())}>
       Reset <RestartAltIcon />{" "}
     </Button>
   );

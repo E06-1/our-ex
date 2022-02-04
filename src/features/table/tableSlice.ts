@@ -36,6 +36,7 @@ export const tableSlice = createSlice({
       }
       return newState;
     },
+    reset: (state)=>{Object.keys(state).forEach(cell=> state[cell as any] = initialCellState)}, 
     overwrite: (state, action: PayloadAction<Table>) => action.payload,
     setCellContent: (
       state,
@@ -79,7 +80,7 @@ export const tableSlice = createSlice({
 });
 
 
-export const { init, overwrite, setCellStyle, mergeCellStyle, setCellContent } =
+export const { init, overwrite, setCellStyle, mergeCellStyle, setCellContent, reset } =
   tableSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

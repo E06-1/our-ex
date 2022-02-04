@@ -19,6 +19,7 @@ export default function Sum() {
 
   useEffect(() => {
     if (!waitingForSelection) return;
+    if (Object.keys(selectedCells).includes(resultCell)) return;
 
     // All values from selected cells
     const values = Object.values(selectedCells).map((value) =>
@@ -32,7 +33,7 @@ export default function Sum() {
 
     //getting summing up all values and updating the state
     SetSumValue(onlyNumValues.reduce((a, b) => a + b, 0));
-  }, [selectedCells, waitingForSelection]);
+  }, [selectedCells, waitingForSelection, resultCell]);
 
   useEffect(() => {
     if (!sumValue) return;
