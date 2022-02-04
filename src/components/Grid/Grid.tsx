@@ -62,7 +62,7 @@ function Grid({ rows, columns }: GridProps) {
       style={{
         display: "grid",
         gridTemplateColumns: `repeat(${columns},minmax(50px, min-content))`,
-        gridTemplateRows: `repeat(${rows}, 50px)`,
+        gridTemplateRows: `repeat(${rows},minmax(50px, min-content))`,
       }}
     >
       {Object.keys(table.present).map((cellname, index) => (
