@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../../store";
-import { CellName } from "../table/tableSlice";
+import { CellName, Table } from "../table/tableSlice";
 
 // Define a type for the slice state
 type Selected = CellName[];
@@ -34,6 +34,16 @@ export const selectedSlice = createSlice({
 export const { reset, setSelected, addSelected } = selectedSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectSelectedCells = (state: RootState) => state.selected;
+export const selectSelectedCellNames = (state: RootState) => state.selected;
+export const selectSelectedCells = (state: RootState)=> {
+  const selected = state.selected 
+  const filteredTable = Object.entries(state.table.present).filter((arr) => { 
+    const [cellname, value] = arr;
+    return selected.includes(cellname as CellName);
+  })
+  return Object.fromEntries(filteredTable) as Table; 
+ //console.log("object entries", filteredTable)
+}
 
 export default selectedSlice.reducer;
+
