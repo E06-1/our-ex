@@ -67,9 +67,13 @@ export default React.forwardRef(function Cell(
         outline: isSelected ? "2px solid red" : "transparent",
         overflow: "visible",
         zIndex: isSelected ? "2" : "0",
+        userSelect: isEditable ? "text" : "none",
       }}
       onClick={() => onRequestFocus(cellname)}
-      onDoubleClick={() => onRequestEditable(cellname)}
+      onDoubleClick={() => {
+        onRequestEditable(cellname);
+        onSelectionEnd();
+      }}
       /* onDrag={() => console.log("onDrag")} */
       onMouseDown={() => onSelectionStart(cellname)}
       onFocus={() => onRequestFocus(cellname)}
