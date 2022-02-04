@@ -16,7 +16,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import FormatColorTextIcon from "@mui/icons-material/FormatColorText";
 import SketchExample from "./ColorPicker";
 
-import { selectSelectedCells } from "../../../features/selected/selectedSlice";
+import { selectSelectedCellNames } from "../../../features/selected/selectedSlice";
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../store";
 import { mergeCellStyle } from "../../../features/table/tableSlice";
@@ -41,7 +41,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 export default function TextAlignColor() {
 
   const dispatch = useAppDispatch();
-  const selected = useSelector(selectSelectedCells);
+  const selected = useSelector(selectSelectedCellNames);
 
 
   const [alignment, setAlignment] = React.useState("left");
