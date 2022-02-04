@@ -23,7 +23,7 @@ function Grid({ rows, columns }: GridProps) {
   const [editableCell, setEditableCell] = useState<CellName | null>(null);
   const [selectionStart, setSelectionStart] = useState<CellName | null>(null);
   const [selectionCorner, setSelectionCorner] = useState<CellName | null>(null);
-  const [newSelection, setNewSelection] = useState<CellName[]>([]);
+  const [isSelecting, setIsSelecting] = useState(false);
 
   const table = useSelector(selectPresentTable);
   const selectedCells = useSelector(selectSelectedCellNames);
@@ -35,26 +35,28 @@ function Grid({ rows, columns }: GridProps) {
   }, [rows, columns, dispatch]);
 
   const handleSelectionStart = (cellname: CellName) => {
+    setIsSelecting(true);
     setSelectionStart(cellname);
   };
 
   const handleSelectionCorner = (cellname: CellName) => {
+    if (!isSelecting) return;
     setSelectionCorner(cellname);
-    if(!selectionStart || !cellname) return;
-    dispatch(setSelected(determineSelection(selectionStart, cellname)))
+    if (!selectionStart || !cellname) return;
+    dispatch(setSelected(determineSelection(selectionStart, cellname)));
   };
 
   const handleSelectionEnd = () => {
-    if(!selectionStart || !selectionCorner) return;
-    dispatch(setSelected(determineSelection(selectionStart, selectionCorner)))
-    setSelectionStart(null)
-    setSelectionCorner(null)
+    if (!selectionCorner && selectionStart)
+      dispatch(setSelected(selectionStart));
+    if (selectionStart && selectionCorner)
+      dispatch(
+        setSelected(determineSelection(selectionStart, selectionCorner))
+      );
+    setSelectionStart(null);
+    setSelectionCorner(null);
+    setIsSelecting(false);
   };
-
-  useEffect(() => {
-    if(!selectionStart || !selectionCorner) return;
-    setNewSelection(determineSelection(selectionStart, selectionCorner))
-  }, [selectionStart, selectionCorner])
 
   return (
     <div
@@ -73,6 +75,8 @@ function Grid({ rows, columns }: GridProps) {
           isEditable={cellname === editableCell}
           onRequestEditable={(cellname) => setEditableCell(cellname)}
           onRequestFocus={(cellname) => {
+            console.log("requestFocus");
+
             dispatch(setSelected(cellname));
             setEditableCell(cellname === editableCell ? cellname : null);
           }}
@@ -107,7 +111,7 @@ function determineSelection(
       return coords;
     }, {} as { x: number; y: number });
 
-    const selection: CellName[] = []
+  const selection: CellName[] = [];
   for (
     let x = startCords.x;
     startCords.x <= endCords.x ? x <= endCords.x : x >= endCords.x;
@@ -118,9 +122,8 @@ function determineSelection(
       startCords.y <= endCords.y ? y <= endCords.y : y >= endCords.y;
       startCords.y <= endCords.y ? y++ : y--
     ) {
-      selection.push(`${x},${y}`)
+      selection.push(`${x},${y}`);
     }
-    
   }
   return selection;
 }
