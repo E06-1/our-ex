@@ -14,8 +14,13 @@ import Paper from "@mui/material/Paper";
 import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import FormatColorTextIcon from "@mui/icons-material/FormatColorText";
-
 import SketchExample from "./ColorPicker";
+
+import { selectSelectedCells } from "../../../features/selected/selectedSlice";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../store";
+import { mergeCellStyle } from "../../../features/table/tableSlice";
+import { textAlign } from "@mui/system";
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   "& .MuiToggleButtonGroup-grouped": {
@@ -34,15 +39,34 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 export default function TextAlignColor() {
+
+  const dispatch = useAppDispatch();
+  const selected = useSelector(selectSelectedCells);
+
+
   const [alignment, setAlignment] = React.useState("left");
   const [formats, setFormats] = React.useState(() => ["italic"]);
 
   const handleFormat = (event, newFormats) => {
     setFormats(newFormats);
+
+   
+    
+  
+
+
   };
 
   const handleAlignment = (event, newAlignment) => {
     setAlignment(newAlignment);
+
+    dispatch(
+      mergeCellStyle({
+        cellname: selected,
+        style: {textAlign: `${newAlignment}` }
+      })
+    );
+
   };
 
   return (
@@ -82,13 +106,13 @@ export default function TextAlignColor() {
           onChange={handleFormat}
           aria-label="text formatting"
         >
-          <ToggleButton value="bold" aria-label="bold">
+          <ToggleButton value={{fontWeight: "bold" }} aria-label="bold">
             <FormatBoldIcon />
           </ToggleButton>
-          <ToggleButton value="italic" aria-label="italic">
+          <ToggleButton value={{fontStyle: "italic"}} aria-label="italic">
             <FormatItalicIcon />
           </ToggleButton>
-          <ToggleButton value="underlined" aria-label="underlined">
+          <ToggleButton value={{textDecoration: "underlined"}} aria-label="underlined">
             <FormatUnderlinedIcon />
           </ToggleButton>
           <ToggleButton value="color" aria-label="color">

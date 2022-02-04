@@ -62,12 +62,18 @@ export const tableSlice = createSlice({
     },
     mergeCellStyle: (
       state,
-      action: PayloadAction<{ cellname: CellName; style: React.CSSProperties }>
+      action: PayloadAction<{ cellname: CellName|CellName[]; style: React.CSSProperties }>
     ) => {
-      state[action.payload.cellname].style = {
+    if(Array.isArray(action.payload.cellname)) {
+      action.payload.cellname.forEach( cellname =>  state[cellname].style = {
+        ...state[cellname].style,
+        ...action.payload.style,
+      })
+    } else
+      {state[action.payload.cellname].style = {
         ...state[action.payload.cellname].style,
         ...action.payload.style,
-      };
+      };}
     },
   },
 });
