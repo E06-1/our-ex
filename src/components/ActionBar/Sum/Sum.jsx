@@ -8,16 +8,14 @@ import { useState, useEffect } from "react";
 export default function Sum() {
   const dispatch = useAppDispatch();
   const selectedCells = useSelector(selectSelectedCells);
-  //array.reduce(function(total, currentValue, currentIndex, arr), initialValue)
-  // const sum = (total, value) => total + value;
 
   const [resultCell, setResultCell] = useState(null);
 
-  //setting MAX button to wait till selected cells will be chosen
+  //setting SUM button to wait till selected cells will be chosen
   const [waitingForSelection, setWaitingForSelection] = useState(false);
 
-  //updating Max Value
-  const [maxValue, SetMaxValue] = useState(null);
+  //updating Sum Value
+  const [sumValue, SetSumValue] = useState(null);
 
   useEffect(() => {
     if (!waitingForSelection) return;
@@ -28,21 +26,20 @@ export default function Sum() {
     );
     //Only number array of selected cells
     const onlyNumValues = values.filter((item) => !Number.isNaN(item));
-    //console.log("values are", onlyNumValues);
+
+    // Checking if its not an empty array
     if (onlyNumValues.length === 0) return;
-    //getting max value
-    SetMaxValue(Math.max(...onlyNumValues));
-    console.log("num values", onlyNumValues);
-    // onlyNumValues.reduce(function(total, currentValue), initialValue)
-    console.log("max value", Math.max(...onlyNumValues));
+
+    //getting summing up all values and updating the state
+    SetSumValue(onlyNumValues.reduce((a, b) => a + b, 0));
   }, [selectedCells, waitingForSelection]);
 
   useEffect(() => {
-    if (!maxValue) return;
+    if (!sumValue) return;
 
-    //setting in resultCell => content: MaxValue
-    dispatch(setCellContent({ cellname: resultCell, content: maxValue }));
-  }, [maxValue, dispatch, resultCell]);
+    //setting in resultCell => content: SumValue
+    dispatch(setCellContent({ cellname: resultCell, content: sumValue }));
+  }, [sumValue, dispatch, resultCell]);
 
   return (
     <Button

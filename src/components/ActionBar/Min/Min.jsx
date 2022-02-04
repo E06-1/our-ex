@@ -15,7 +15,7 @@ export default function Min() {
   //setting MIN button to wait till selected cells will be chosen
   const [waitingForSelection, setWaitingForSelection] = useState(false);
 
-  //updating Max Value
+  //updating Min Value
   const [minValue, SetMinValue] = useState(null);
 
   useEffect(() => {
@@ -27,7 +27,8 @@ export default function Min() {
     );
     //Only number array of selected cells
     const onlyNumValues = values.filter((item) => !Number.isNaN(item));
-    //  console.log("values are", onlyNumValues);
+
+    // Checking if its not an empty array
     if (onlyNumValues.length === 0) return;
     //getting min value
     SetMinValue(Math.min(...onlyNumValues));
