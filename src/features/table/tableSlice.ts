@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React, { Reducer } from "react";
+import { act } from "react-dom/test-utils";
 import type { RootState } from "../../store";
 
 // Define a type for the slice state
@@ -24,10 +25,7 @@ export const tableSlice = createSlice({
   // `tableSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    init: (
-      state,
-      action: PayloadAction<{ rows: number; columns: number }>
-    ) => {
+    init: (state, action: PayloadAction<{ rows: number; columns: number }>) => {
       const newState = { ...initialState };
       for (let r = 0; r < action.payload.rows; r++) {
         for (let c = 0; c < action.payload.columns; c++) {
@@ -36,13 +34,29 @@ export const tableSlice = createSlice({
       }
       return newState;
     },
-    reset: (state)=>{Object.keys(state).forEach(cell=> state[cell as any] = {...initialCellState})}, 
+    reset: (state) => {
+      Object.keys(state).forEach(
+        (cell) => (state[cell as any] = { ...initialCellState })
+      );
+    },
     overwrite: (state, action: PayloadAction<Table>) => action.payload,
+    deleteCellContent: (state, action: PayloadAction<CellName | CellName []>) => {
+      if(Array.isArray(action.payload)){
+        action.payload.forEach((cellname) => {
+          if(state[cellname])
+          state[cellname].content = ""})
+      }else{
+        if(state[action.payload])
+        state[action.payload].content = ""
+      }
+    },
     setCellContent: (
       state,
       action: PayloadAction<{ cellname: CellName; content: string }>
     ) => {
-      if(!state[action.payload.cellname]) state[action.payload.cellname] = {...initialCellState};
+      if (!state[action.payload.cellname])
+        state[action.payload.cellname] = { ...initialCellState };
+
       state[action.payload.cellname].content = action.payload.content;
     },
     setCellStyle: (
@@ -60,34 +74,52 @@ export const tableSlice = createSlice({
       return newState; */
 
       //Simple way with Immer
-      if(!state[action.payload.cellname]) state[action.payload.cellname] = {...initialCellState};
+      if (!state[action.payload.cellname])
+        state[action.payload.cellname] = { ...initialCellState };
       state[action.payload.cellname].style = action.payload.style;
     },
     mergeCellStyle: (
       state,
-      action: PayloadAction<{ cellname: CellName|CellName[]; style: React.CSSProperties }>
+      action: PayloadAction<{
+        cellname: CellName | CellName[];
+        style: React.CSSProperties;
+      }>
     ) => {
-    if(Array.isArray(action.payload.cellname)) {
-      action.payload.cellname.forEach( cellname =>  state[cellname].style = {
-        ...state[cellname].style,
-        ...action.payload.style,
-      })
-    } else
-      {state[action.payload.cellname].style = {
-        ...state[action.payload.cellname].style,
-        ...action.payload.style,
-      };}
+      if (Array.isArray(action.payload.cellname)) {
+        action.payload.cellname.forEach((cellname) => {
+          if (!state[cellname]) state[cellname] = { ...initialCellState };
+          state[cellname].style = {
+            ...state[cellname].style,
+            ...action.payload.style,
+          };
+        });
+      } else {
+        if (!state[action.payload.cellname])
+          state[action.payload.cellname] = { ...initialCellState };
+        state[action.payload.cellname].style = {
+          ...state[action.payload.cellname].style,
+          ...action.payload.style,
+        };
+      }
     },
   },
 });
 
-
-export const { init, overwrite, setCellStyle, mergeCellStyle, setCellContent, reset } =
-  tableSlice.actions;
+export const {
+  init,
+  overwrite,
+  setCellStyle,
+  mergeCellStyle,
+  setCellContent,
+  reset,
+  deleteCellContent
+} = tableSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCell = (cellName: CellName) => (state: RootState) =>
-  state.table.present[cellName] ? state.table.present[cellName] : initialCellState;
+  state.table.present[cellName]
+    ? state.table.present[cellName]
+    : initialCellState;
 export const selectPresentTable = (state: RootState) => state.table.present;
 
 export default tableSlice.reducer;

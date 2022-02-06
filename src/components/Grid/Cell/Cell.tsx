@@ -1,59 +1,64 @@
+import { textAlign } from "@mui/system";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { setSelected } from "../../../features/selected/selectedSlice";
+import {
+  endSelection,
+  refreshSelection,
+  selectIsEditable,
+  selectIsSelected,
+  selectIsSelecting,
+  setEditableCell,
+  setFocusedCell,
+  setSelectionCorner,
+  setSelectionStart,
+  startSelection,
+} from "../../../features/selected/selectedSlice";
 import {
   CellName,
   selectCell,
   setCellContent,
 } from "../../../features/table/tableSlice";
-import { useAppDispatch } from "../../../store";
+import { store, useAppDispatch } from "../../../store";
 import "./Cell.css";
 
 interface CellProps {
   cellname: CellName;
-  isSelected: boolean;
-  onRequestEditable: (cellname: CellName) => void;
-  isEditable: boolean;
-  onRequestFocus: (cellname: CellName) => void;
-  onSelectionStart: (cellname: CellName) => void;
-  onSelectionCorner: (cellname: CellName) => void;
-  onSelectionEnd: () => void;
 }
 
-export default React.forwardRef(function Cell(
-  {
-    cellname,
-    isSelected,
-    onRequestEditable,
-    isEditable,
-    onRequestFocus,
-    onSelectionStart,
-    onSelectionCorner,
-    onSelectionEnd,
-  }: CellProps,
-  forwarRef
-) {
-  const ref = useRef<HTMLDivElement>(null);
+export default React.forwardRef<
+  { start: HTMLDivElement | null; corner: HTMLDivElement | null },
+  CellProps
+>(function Cell({ cellname }: CellProps, selectionRef) {
+  const ref = useRef<HTMLDivElement | null>(null);
 
   const cellstate = useSelector(selectCell(cellname));
+  const isEditable = useSelector(selectIsEditable(cellname));
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!ref.current) return;
     if (ref.current.innerText !== cellstate.content)
       dispatch(setCellContent({ cellname, content: ref.current.innerText }));
-  }, [isSelected, cellname, cellstate.content, dispatch]);
+  }, [cellname, cellstate.content, dispatch, isEditable]);
 
   useEffect(() => {
-    if (!ref.current) return;
-    if (isEditable) ref.current.focus();
+    if (isEditable) {
+      if (!ref.current) return;      
+      setCaret(ref.current)
+    }
   }, [isEditable]);
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
+    
     switch (e.key) {
       case "Delete":
         dispatch(setCellContent({ cellname, content: "" }));
+        dispatch(refreshSelection());
         break;
+    }
+
+    if(e.key.length === 1 && !isEditable){
+      dispatch(setEditableCell(cellname))
     }
   };
 
@@ -64,36 +69,79 @@ export default React.forwardRef(function Cell(
       style={{
         border: "1px solid lightgray",
         ...cellstate.style,
-        outline: isSelected ? "2px solid red" : "transparent",
         overflow: "visible",
-        zIndex: isSelected ? "2" : "0",
         userSelect: isEditable ? "text" : "none",
+        outline: "none",
+        display: "flex",
+        justifyContent: "center",
+        flexDirection: "column",
       }}
-      onClick={() => onRequestFocus(cellname)}
       onDoubleClick={() => {
-        onRequestEditable(cellname);
-        onSelectionEnd();
+        dispatch(setEditableCell(cellname));
       }}
-      /* onDrag={() => console.log("onDrag")} */
-      onMouseDown={() => onSelectionStart(cellname)}
-      onFocus={() => onRequestFocus(cellname)}
+      onFocus={() => {
+        dispatch(setFocusedCell(cellname));
+        if (
+          !(selectionRef instanceof Function) &&
+          selectionRef &&
+          selectionRef.current
+        ) {
+          selectionRef.current.start = ref.current;
+          selectionRef.current.corner = ref.current;
+        }
+      }}
+      onMouseDown={() => {
+        dispatch(startSelection());
+        dispatch(setSelectionStart(cellname));
+        if (
+          !(selectionRef instanceof Function) &&
+          selectionRef &&
+          selectionRef.current
+        ) {
+          selectionRef.current.start = ref.current;
+          selectionRef.current.corner = ref.current;
+        }
+      }}
+      /* onFocus={() => onRequestFocus(cellname)} */
       contentEditable={isEditable}
       suppressContentEditableWarning
-      ref={ref}
+      ref={(element) => {
+        ref.current = element;
+      }}
       tabIndex={0}
       onMouseEnter={(e) => {
-        e.preventDefault();
-        onSelectionCorner(cellname);
+        if (!store.getState().selected.isSelecting) return;
+        dispatch(setSelectionCorner(cellname));
+        if (
+          !(selectionRef instanceof Function) &&
+          selectionRef &&
+          selectionRef.current
+        )
+          selectionRef.current.corner = ref.current;
       }}
-      onMouseUp={() => onSelectionEnd()}
+      onMouseUp={() => dispatch(endSelection())}
       onDragOverCapture={(e) => e.preventDefault()}
       draggable={false}
       onDrag={(e) => e.preventDefault()}
       onDragStart={(e) => e.preventDefault()}
       onDragEnter={(e) => e.preventDefault()}
       onKeyDown={handleKeyDown}
+      onInput={() => dispatch(refreshSelection())}
     >
       {cellstate.content}
     </div>
   );
 });
+
+function setCaret(element: HTMLElement) {
+  const nodes = element.childNodes
+  if (nodes.length === 0) element.innerText = " ";
+  const range = document.createRange();
+  const selection = window.getSelection();
+
+  range.setStart(nodes[0], 0);
+  range.setEnd(nodes[0], nodes[0].textContent?.length ? nodes[0].textContent?.length : 0)
+  selection?.removeAllRanges();
+  selection?.addRange(range);
+  element.focus();
+}
