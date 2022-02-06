@@ -36,12 +36,13 @@ export const tableSlice = createSlice({
       }
       return newState;
     },
-    reset: (state)=>{Object.keys(state).forEach(cell=> state[cell as any] = initialCellState)}, 
+    reset: (state)=>{Object.keys(state).forEach(cell=> state[cell as any] = {...initialCellState})}, 
     overwrite: (state, action: PayloadAction<Table>) => action.payload,
     setCellContent: (
       state,
       action: PayloadAction<{ cellname: CellName; content: string }>
     ) => {
+      if(!state[action.payload.cellname]) state[action.payload.cellname] = {...initialCellState};
       state[action.payload.cellname].content = action.payload.content;
     },
     setCellStyle: (
@@ -59,6 +60,7 @@ export const tableSlice = createSlice({
       return newState; */
 
       //Simple way with Immer
+      if(!state[action.payload.cellname]) state[action.payload.cellname] = {...initialCellState};
       state[action.payload.cellname].style = action.payload.style;
     },
     mergeCellStyle: (
