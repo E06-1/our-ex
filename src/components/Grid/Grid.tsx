@@ -20,19 +20,15 @@ interface GridProps {
 }
 
 function Grid({ rows, columns }: GridProps) {
+  const [grid,setGrid] = useState<CellName[]>([]);
   const [editableCell, setEditableCell] = useState<CellName | null>(null);
   const [selectionStart, setSelectionStart] = useState<CellName | null>(null);
   const [selectionCorner, setSelectionCorner] = useState<CellName | null>(null);
   const [isSelecting, setIsSelecting] = useState(false);
 
-  const table = useSelector(selectPresentTable);
-  const selectedCells = useSelector(selectSelectedCellNames);
+  /* const table = useSelector(selectPresentTable);*/
+  const selectedCells = useSelector(selectSelectedCellNames); 
   const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    const resetAction = init({ rows, columns });
-    dispatch(resetAction);
-  }, [rows, columns, dispatch]);
 
   const handleSelectionStart = (cellname: CellName) => {
     setIsSelecting(true);
@@ -58,16 +54,30 @@ function Grid({ rows, columns }: GridProps) {
     setIsSelecting(false);
   };
 
+  //Generate Cellnames on initial Render
+  useEffect(() => {
+    const cellNames: CellName[] = []
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < columns; c++) {
+          cellNames.push(`${c},${r}`)
+        }
+      }
+      setGrid(cellNames);
+  }, [rows,columns])
+
   return (
     <div
       className="Grid"
       style={{
         display: "grid",
+        overflow: "auto",
+        width: "max-content",
         gridTemplateColumns: `repeat(${columns},minmax(50px, min-content))`,
         gridTemplateRows: `repeat(${rows},minmax(50px, min-content))`,
       }}
     >
-      {Object.keys(table).map((cellname, index) => (
+      {grid.map((cellname, index) => {/* console.log("map"); */
+       return(
         <Cell
           key={cellname}
           cellname={cellname as CellName}
@@ -84,10 +94,15 @@ function Grid({ rows, columns }: GridProps) {
           onSelectionCorner={handleSelectionCorner}
           onSelectionEnd={handleSelectionEnd}
         />
-      ))}
+        
+      )})}
     </div>
   );
 }
+
+
+
+
 
 function determineSelection(
   selectionStart: CellName,
