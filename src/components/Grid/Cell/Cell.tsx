@@ -49,13 +49,6 @@ export default React.forwardRef<
   }, [isEditable]);
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
-    
-    switch (e.key) {
-      case "Delete":
-        dispatch(setCellContent({ cellname, content: "" }));
-        dispatch(refreshSelection());
-        break;
-    }
 
     if(e.key.length === 1 && !isEditable){
       dispatch(setEditableCell(cellname))
