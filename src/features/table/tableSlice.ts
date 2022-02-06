@@ -40,14 +40,25 @@ export const tableSlice = createSlice({
       );
     },
     overwrite: (state, action: PayloadAction<Table>) => action.payload,
-    deleteCellContent: (state, action: PayloadAction<CellName | CellName []>) => {
-      if(Array.isArray(action.payload)){
+    deleteCellContent: (
+      state,
+      action: PayloadAction<CellName | CellName[]>
+    ) => {
+      if (Array.isArray(action.payload)) {
         action.payload.forEach((cellname) => {
-          if(state[cellname])
-          state[cellname].content = ""})
-      }else{
-        if(state[action.payload])
-        state[action.payload].content = ""
+          if (!state[cellname]) return;
+          if (Object.keys(state[cellname].style).length === 0) {
+            delete state[cellname];
+          } else {
+            state[cellname].content = "";
+          }
+        });
+      } else {
+        if (!state[action.payload]) return;
+        if (Object.keys(state[action.payload].style).length === 0) {
+          delete state[action.payload];
+        } else {
+        state[action.payload].content = "";}
       }
     },
     setCellContent: (
@@ -112,7 +123,7 @@ export const {
   mergeCellStyle,
   setCellContent,
   reset,
-  deleteCellContent
+  deleteCellContent,
 } = tableSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
