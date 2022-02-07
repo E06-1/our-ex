@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 
 export default function Max() {
   const dispatch = useAppDispatch();
-  const selectedCells = useSelector(selectSelectedCells);
+  const selectedCells = useSelector(selectSelectedCells("current"));
 
   // 1. When Max is clicked determine and save in local state the currently selected Cell (firstSelected)
   // 2. When the selection changes calculate the max value and dispatch(setCellContent({cellname: firstSelected, content: getMax}))

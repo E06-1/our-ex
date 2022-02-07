@@ -12,24 +12,30 @@ import {
   selectSelectionCorner,
   selectSelectionStart,
 } from "../../../features/selected/selectedSlice";
-import { CellName, deleteCellContent, setCellContent } from "../../../features/table/tableSlice";
+import {
+  CellName,
+  deleteCellContent,
+  setCellContent,
+} from "../../../features/table/tableSlice";
 import { useAppDispatch } from "../../../store";
 
-function Selection({
-  selectionRef,
-}: {
+interface SelectionProps {
   selectionRef: React.MutableRefObject<{
     start: HTMLDivElement | null;
     corner: HTMLDivElement | null;
   } | null>;
-}) {
+  type: "current" | "additional";
+}
+
+function Selection({ selectionRef, type }: SelectionProps) {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState({ top: 0, left: 0 });
   const [size, setSize] = useState({ height: 0, width: 0 });
-  const selectionStart = useSelector(selectSelectionStart);
-  const selectionCorner = useSelector(selectSelectionCorner);
-  const selectionNames = useSelector(selectSelectedCellNames)
+  const selectionStart = useSelector(selectSelectionStart(type));
+  const selectionCorner = useSelector(selectSelectionCorner(type));
+  const selectionNames = useSelector(selectSelectedCellNames(type));
   const refresh = useSelector(selectRefreshSelection);
+
   useLayoutEffect(() => {
     if (!selectionStart || !selectionCorner || !selectionRef.current) return;
 
@@ -61,18 +67,15 @@ function Selection({
     });
   }, [selectionStart, selectionCorner, selectionRef, refresh]);
 
-  
-
   useEffect(() => {
     const handleKeyDown = (e: Event) => {
-        if(!(e instanceof KeyboardEvent)) return;
-        if (e.key === "Delete") dispatch(deleteCellContent(selectionNames))
-      };
-    const grid = document
-      .getElementsByClassName("Grid")[0]
+      if (!(e instanceof KeyboardEvent)) return;
+      if (e.key === "Delete") dispatch(deleteCellContent(selectionNames));
+    };
+    const grid = document.getElementsByClassName("Grid")[0];
     grid.addEventListener("keydown", handleKeyDown);
 
-    return () => grid.removeEventListener("keydown", handleKeyDown)
+    return () => grid.removeEventListener("keydown", handleKeyDown);
   }, [selectionNames]);
   return (
     <div

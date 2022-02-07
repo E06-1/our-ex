@@ -41,7 +41,7 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 export default function TextAlignColor() {
 
   const dispatch = useAppDispatch();
-  const selected = useSelector(selectSelectedCellNames);
+  const selected = useSelector(selectSelectedCellNames("current"));
 
 
   const [alignment, setAlignment] = React.useState("left");

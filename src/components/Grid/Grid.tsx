@@ -49,7 +49,7 @@ function Grid({ rows, columns }: GridProps) {
       }}
     >
       {grid}
-      <Selection selectionRef={selectionRef} />
+      <Selection selectionRef={selectionRef} type="current"/>
     </div>
   );
 }

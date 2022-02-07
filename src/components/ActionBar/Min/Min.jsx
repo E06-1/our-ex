@@ -6,7 +6,7 @@ import { setCellContent } from "../../../features/table/tableSlice";
 import { useState, useEffect } from "react";
 export default function Min() {
   const dispatch = useAppDispatch();
-  const selectedCells = useSelector(selectSelectedCells);
+  const selectedCells = useSelector(selectSelectedCells("current"));
   // const getMin = (array) => Math.max(...array);
 
   // setting where result will be calculated

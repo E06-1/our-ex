@@ -1,26 +1,44 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { table } from "console";
 import type { RootState } from "../../store";
 import { CellName, initialCellState, Table } from "../table/tableSlice";
 
 // Define a type for the slice state
 type Selected = {
   isSelecting: boolean;
-  selectionStart: CellName | null;
-  selectionCorner: CellName | null;
+  requiresAdditionalSelection: boolean;
+  current: {
+    selectionStart: CellName | null;
+    selectionCorner: CellName | null;
+    selectedCellNames: CellName[];
+  };
+  additional: {
+    selectionStart: CellName | null;
+    selectionCorner: CellName | null;
+    selectedCellNames: CellName[];
+  };
   focusedCell: CellName | null;
   editableCell: CellName | null;
-  selectedCellNames: CellName[];
   refresh: boolean;
 };
 
 // Define the initial state using that type
 const initialState: Selected = {
   isSelecting: false,
-  selectionStart: null,
-  selectionCorner: null,
+  requiresAdditionalSelection: false,
+  current: {
+    selectionStart: null,
+    selectionCorner: null,
+    selectedCellNames: [],
+  },
+  additional: {
+    selectionStart: null,
+    selectionCorner: null,
+    selectedCellNames: [],
+  },
   focusedCell: null,
   editableCell: null,
-  selectedCellNames: [],
+
   refresh: false,
 };
 
@@ -29,8 +47,11 @@ export const selectedSlice = createSlice({
   // `selectedSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-
     reset: (state) => ({ ...initialState }),
+
+    startAdditionalSelection: (state) => {state.requiresAdditionalSelection = true},
+
+    stopAdditionalSelection: (state) => {state.requiresAdditionalSelection = false},
 
     startSelection: (state) => {
       state.isSelecting = true;
@@ -46,42 +67,66 @@ export const selectedSlice = createSlice({
     },
 
     setSelectionStart: (state, action: PayloadAction<CellName>) => {
-      state.selectionStart = action.payload;
-      state.selectionCorner = action.payload;
-      state.selectedCellNames = determineSelection(
-        state.selectionStart,
-        state.selectionCorner
-      );
-      if (state.selectionStart !== state.editableCell)
-        state.editableCell = null;
-      if (state.selectionStart !== state.focusedCell) state.focusedCell = null;
+      if (!state.requiresAdditionalSelection) {
+        state.current.selectionStart = action.payload;
+        state.current.selectionCorner = action.payload;
+        state.current.selectedCellNames = determineSelection(
+          state.current.selectionStart,
+          state.current.selectionCorner
+        );
+        if (state.current.selectionStart !== state.editableCell)
+          state.editableCell = null;
+        if (state.current.selectionStart !== state.focusedCell)
+          state.focusedCell = null;
+      } else {
+        state.additional.selectionStart = action.payload;
+        state.additional.selectionCorner = action.payload;
+        state.additional.selectedCellNames = determineSelection(
+          state.additional.selectionStart,
+          state.additional.selectionCorner
+        );
+      }
     },
 
     setSelectionCorner: (state, action: PayloadAction<CellName>) => {
-      if (!state.isSelecting || !state.selectionStart || state.editableCell)
-        return;
-      state.selectionCorner = action.payload;
-      state.selectedCellNames = determineSelection(
-        state.selectionStart,
-        state.selectionCorner
-      );
+      if (!state.requiresAdditionalSelection) {
+        if (
+          !state.isSelecting ||
+          !state.current.selectionStart ||
+          state.editableCell
+        )
+          return;
+        state.current.selectionCorner = action.payload;
+        state.current.selectedCellNames = determineSelection(
+          state.current.selectionStart,
+          state.current.selectionCorner
+        );
+      } else {
+        if (!state.isSelecting || !state.additional.selectionStart) return;
+        state.additional.selectionCorner = action.payload;
+        state.additional.selectedCellNames = determineSelection(
+          state.additional.selectionStart,
+          state.additional.selectionCorner
+        );
+      }
     },
 
     setFocusedCell: (state, action: PayloadAction<CellName>) => {
-      state.focusedCell = action.payload;
-      state.selectionStart = action.payload;
-      state.selectionCorner = action.payload;
-      state.selectedCellNames = determineSelection(
-        state.selectionStart,
-        state.selectionCorner
-      );
-      if (state.editableCell !== state.focusedCell) state.editableCell = null;
+      if (!state.requiresAdditionalSelection) {
+        state.focusedCell = action.payload;
+        state.current.selectionStart = action.payload;
+        state.current.selectionCorner = action.payload;
+        state.current.selectedCellNames = determineSelection(
+          state.current.selectionStart,
+          state.current.selectionCorner
+        );
+        if (state.editableCell !== state.focusedCell) state.editableCell = null;
+      }
     },
 
     setEditableCell: (state, action: PayloadAction<CellName>) => {
       state.editableCell = action.payload;
     },
-
   },
 });
 
@@ -96,20 +141,33 @@ export const {
   refreshSelection,
 } = selectedSlice.actions;
 
+//Added for backwards compatibility:
+/*
+if(type === "current" || type === "additional"){
+  if(type === "current"){return }
+  if(type === "additional"){return}
+}else {
+  return selectSelectedCellNames("current")(type)
+}
+*/
+
 // Other code such as selectors can use the imported `RootState` type
-export const selectSelectedCellNames = (state: RootState) =>
-  state.selected.selectedCellNames;
+export const selectSelectedCellNames =
+  (type: "current" | "additional") => (state: RootState) =>
+    state.selected[type].selectedCellNames;
 
-export const selectIsSelected = (cellname: CellName) => (state: RootState) =>
-  state.selected.selectedCellNames.includes(cellname);
+export const selectIsSelected =
+  (cellname: CellName, type: "current" | "additional") => (state: RootState) =>
+    state.selected[type].selectedCellNames.includes(cellname);
 
-export const selectSelectedCells = (state: RootState) =>
-  state.selected.selectedCellNames.reduce((selectedCells, cellname) => {
-    selectedCells[cellname] = state.table.present[cellname]
-      ? state.table.present[cellname]
-      : initialCellState;
-    return selectedCells;
-  }, {} as Table);
+export const selectSelectedCells =
+  (type: "current" | "additional") => (state: RootState) =>
+    state.selected[type].selectedCellNames.reduce((selectedCells, cellname) => {
+      selectedCells[cellname] = state.table.present[cellname]
+        ? state.table.present[cellname]
+        : initialCellState;
+      return selectedCells;
+    }, {} as Table);
 
 export const selectIsFocused = (cellname: CellName) => (state: RootState) =>
   state.selected.focusedCell === cellname;
@@ -118,25 +176,25 @@ export const selectIsEditable = (cellname: CellName) => (state: RootState) =>
   state.selected.editableCell === cellname;
 
 export const selectIsSelectionStart =
-  (cellname: CellName) => (state: RootState) =>
-    state.selected.selectionStart === cellname;
+  (cellname: CellName, type: "current" | "additional") => (state: RootState) =>
+    state.selected[type].selectionStart === cellname;
 
 export const selectIsSelectionCorner =
-  (cellname: CellName) => (state: RootState) =>
-    state.selected.selectionCorner === cellname;
+  (cellname: CellName, type: "current" | "additional") => (state: RootState) =>
+    state.selected[type].selectionCorner === cellname;
 
 export const selectIsSelecting = (state: RootState) =>
   state.selected.isSelecting;
 
-export const selectSelectionStart = (state: RootState) =>
-  state.selected.selectionStart;
+export const selectSelectionStart =
+  (type: "current" | "additional") => (state: RootState) =>
+    state.selected[type].selectionStart;
 
-export const selectSelectionCorner = (state: RootState) =>
-  state.selected.selectionCorner;
+export const selectSelectionCorner =
+  (type: "current" | "additional") => (state: RootState) => state.selected[type].selectionCorner;
 
 export const selectRefreshSelection = (state: RootState) =>
   state.selected.refresh;
-
 
 //Determines Selection based on both corners
 function determineSelection(
