@@ -49,9 +49,16 @@ export const selectedSlice = createSlice({
   reducers: {
     reset: (state) => ({ ...initialState }),
 
-    startAdditionalSelection: (state) => {state.requiresAdditionalSelection = true},
+    startAdditionalSelection: (state) => {
+      state.requiresAdditionalSelection = true;
+    },
 
-    stopAdditionalSelection: (state) => {state.requiresAdditionalSelection = false},
+    stopAdditionalSelection: (state) => {
+      state.requiresAdditionalSelection = false;
+      state.additional.selectedCellNames = []
+      state.additional.selectionStart = null;
+      state.additional.selectionCorner = null;
+    },
 
     startSelection: (state) => {
       state.isSelecting = true;
@@ -139,6 +146,8 @@ export const {
   setFocusedCell,
   setEditableCell,
   refreshSelection,
+  startAdditionalSelection,
+  stopAdditionalSelection,
 } = selectedSlice.actions;
 
 //Added for backwards compatibility:
@@ -191,7 +200,8 @@ export const selectSelectionStart =
     state.selected[type].selectionStart;
 
 export const selectSelectionCorner =
-  (type: "current" | "additional") => (state: RootState) => state.selected[type].selectionCorner;
+  (type: "current" | "additional") => (state: RootState) =>
+    state.selected[type].selectionCorner;
 
 export const selectRefreshSelection = (state: RootState) =>
   state.selected.refresh;

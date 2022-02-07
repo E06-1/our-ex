@@ -49,7 +49,10 @@ function Grid({ rows, columns }: GridProps) {
       }}
     >
       {grid}
-      <Selection selectionRef={selectionRef} type="current"/>
+      <Selection selectionRef={selectionRef} type="current" style={{background: "hsla(170,50%, 50%,0.2)",
+        border: "2px solid green",}}/>
+      <Selection selectionRef={selectionRef} type="additional" style={{background: "hsla(200,50%, 50%,0.2)",
+        border: "2px solid blue",}}/>
     </div>
   );
 }

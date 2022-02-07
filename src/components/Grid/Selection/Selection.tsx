@@ -25,9 +25,10 @@ interface SelectionProps {
     corner: HTMLDivElement | null;
   } | null>;
   type: "current" | "additional";
+  style?: React.CSSProperties
 }
 
-function Selection({ selectionRef, type }: SelectionProps) {
+function Selection({ selectionRef, type, style}: SelectionProps) {
   const dispatch = useAppDispatch();
   const [offset, setOffset] = useState({ top: 0, left: 0 });
   const [size, setSize] = useState({ height: 0, width: 0 });
@@ -37,6 +38,7 @@ function Selection({ selectionRef, type }: SelectionProps) {
   const refresh = useSelector(selectRefreshSelection);
 
   useLayoutEffect(() => {
+    if(type === "additional" && !selectionStart && !selectionCorner) {setOffset({top: 0, left: 0}); setSize({ height: 0, width: 0 })}
     if (!selectionStart || !selectionCorner || !selectionRef.current) return;
 
     const startDiv = selectionRef.current.start;
@@ -76,13 +78,11 @@ function Selection({ selectionRef, type }: SelectionProps) {
     grid.addEventListener("keydown", handleKeyDown);
 
     return () => grid.removeEventListener("keydown", handleKeyDown);
-  }, [selectionNames]);
+  }, [selectionNames, dispatch]);
   return (
     <div
       className="Selection"
       style={{
-        background: "hsla(200,50%, 50%,0.2)",
-        border: "2px solid blue",
         boxSizing: "border-box",
         position: "absolute",
         top: offset.top,
@@ -90,6 +90,7 @@ function Selection({ selectionRef, type }: SelectionProps) {
         height: size.height,
         width: size.width,
         pointerEvents: "none",
+        ...style
       }}
     ></div>
   );
