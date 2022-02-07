@@ -15,7 +15,7 @@ function App() {
       <button onClick={() => dispatch(stopAdditionalSelection())}>Stop Additional Selection</button>
       <ActionBar />
       <EditingBar />
-      <Search />
+    
       </header>
       
       <Grid rows={100} columns={30} />
