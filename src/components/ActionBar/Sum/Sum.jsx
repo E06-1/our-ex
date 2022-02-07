@@ -7,7 +7,7 @@ import { useState, useEffect } from "react";
 
 export default function Sum() {
   const dispatch = useAppDispatch();
-  const selectedCells = useSelector(selectSelectedCells);
+  const selectedCells = useSelector(selectSelectedCells("current"));
 
   const [resultCell, setResultCell] = useState(null);
 

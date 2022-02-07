@@ -13,7 +13,7 @@ import "./Font.css";
 
 export default function Font() {
   const dispatch = useAppDispatch();
-  const selected = useSelector(selectSelectedCellNames);
+  const selected = useSelector(selectSelectedCellNames("current"));
 
   const [size, setSize] = React.useState("12");
   const [family, setFamily] = React.useState("Arial, Helvetica, sans-serif");
