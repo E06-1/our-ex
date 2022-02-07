@@ -1,26 +1,3 @@
-import { isCallChain } from "typescript";
-
-const object = {
-  "0,0": {
-    content: "1",
-    style: {
-      backgroundColor: "red",
-    },
-  },
-  "1,2": {
-    content: "1",
-    style: {
-      backgroundColor: "red",
-    },
-  },
-  "5,7": {
-    content: "1",
-    style: {
-      backgroundColor: "red",
-    },
-  },
-};
-
 export const isTable = (ob) => {
   // get all the keys
   if (typeof ob !== "object") return false;
