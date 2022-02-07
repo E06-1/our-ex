@@ -11,7 +11,7 @@ function App() {
       <header style={{position: "sticky", top:"0", backgroundColor: "white", zIndex: "1"}}>
       <ActionBar />
       <EditingBar />
-      <Search />
+    
       </header>
       
       <Grid rows={100} columns={30} />
