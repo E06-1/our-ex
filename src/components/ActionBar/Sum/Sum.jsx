@@ -19,6 +19,8 @@ export default function Sum() {
 
   useEffect(() => {
     if (!waitingForSelection) return;
+
+    //
     if (Object.keys(selectedCells).includes(resultCell)) return;
 
     // All values from selected cells
