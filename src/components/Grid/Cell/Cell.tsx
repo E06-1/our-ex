@@ -1,6 +1,7 @@
 import { textAlign } from "@mui/system";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { selectIsSearchResult } from "../../../features/search/searchSlice";
 import {
   endSelection,
   refreshSelection,
@@ -29,6 +30,7 @@ export default React.forwardRef<
 
   const cellstate = useSelector(selectCell(cellname));
   const isEditable = useSelector(selectIsEditable(cellname));
+  const isSearchResult = useSelector(selectIsSearchResult(cellname))
   const dispatch = useAppDispatch();
 
   const [rememberedStyle, setRememberedStyle] = useState<React.CSSProperties>(
@@ -61,22 +63,26 @@ export default React.forwardRef<
       dispatch(setEditableCell(cellname));
     }
   };
+
+  const style: React.CSSProperties = {
+    border: "1px solid lightgray",
+    ...rememberedStyle,
+    ...cellstate.style,
+    overflow: "visible",
+    userSelect: isEditable ? "text" : "none",
+    outline: "none",
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+  }
+
+  if(isSearchResult) style.backgroundColor = "yellow";
   
   return (
     <div
       id={cellname}
       className="Cell"
-      style={{
-        border: "1px solid lightgray",
-        ...rememberedStyle,
-        ...cellstate.style,
-        overflow: "visible",
-        userSelect: isEditable ? "text" : "none",
-        outline: "none",
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
+      style={style}
       onDoubleClick={() => {
         dispatch(setEditableCell(cellname));
       }}
