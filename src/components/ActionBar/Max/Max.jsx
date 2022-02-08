@@ -59,15 +59,17 @@ export default function Max() {
   }, [maxValue, dispatch, resultCell]);
 
   return (
-    <Button
-      onClick={() => {
-        setResultCell(focusedCell);
-        dispatch(startAdditionalSelection());
-      }}
-      variant="contained"
-      color="success"
-    >
-      Max
-    </Button>
+    <div>
+      <Button
+        onClick={() => {
+          setResultCell(focusedCell);
+          dispatch(startAdditionalSelection());
+        }}
+        variant="contained"
+        color="success"
+      >
+        Max
+      </Button>
+    </div>
   );
 }

@@ -58,15 +58,17 @@ export default function Sum() {
   }, [sumValue, dispatch, resultCell]);
 
   return (
-    <Button
-      onClick={() => {
-        setResultCell(focusedCell);
-        dispatch(startAdditionalSelection());
-      }}
-      variant="contained"
-      color="success"
-    >
-      Sum
-    </Button>
+    <div>
+      <Button
+        onClick={() => {
+          setResultCell(focusedCell);
+          dispatch(startAdditionalSelection());
+        }}
+        variant="contained"
+        color="success"
+      >
+        Sum
+      </Button>
+    </div>
   );
 }
