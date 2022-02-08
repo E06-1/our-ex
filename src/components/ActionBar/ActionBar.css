@@ -35,3 +35,11 @@ a {
 .actionBarContainer * {
   margin-right: 10px;
 }
+.sortButton * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.iconUp {
+  margin-left: 10px;
+}

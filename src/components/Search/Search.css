@@ -1,12 +1,9 @@
 .searchContainer {
-    display: flex;
-    justify-content: right;
-    align-items: center;
-
-
+  display: flex;
+  justify-content: right;
+  align-items: center;
 }
 
 .searchButton {
-    
-height: 56px;
+  height: 56px;
 }

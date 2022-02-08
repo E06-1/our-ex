@@ -195,13 +195,29 @@ export default function TextAlignColor() {
           >
             <FormatUnderlinedIcon />
           </ToggleButton>
-          <ToggleButton onClick={handleBackgroundColor} value="color" aria-label="color">
+          <ToggleButton
+            onClick={handleBackgroundColor}
+            value="color"
+            aria-label="color"
+          >
             <FormatColorFillIcon />
-            <SketchExample onChange={(color) => setBackground(`rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`)} />
+            <SketchExample
+              onChange={(color) =>
+                setBackground(
+                  `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+                )
+              }
+            />
           </ToggleButton>
           <ToggleButton onClick={handleColor} value="color" aria-label="color">
             <FormatColorTextIcon />
-            <SketchExample onChange={(color) => setFontColor(`rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`)} />
+            <SketchExample
+              onChange={(color) =>
+                setFontColor(
+                  `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`
+                )
+              }
+            />
           </ToggleButton>
         </StyledToggleButtonGroup>
       </Paper>

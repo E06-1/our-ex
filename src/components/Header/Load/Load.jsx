@@ -27,7 +27,7 @@ export default function UploadButtons() {
     <Stack direction="row" alignItems="center" spacing={2}>
       <label htmlFor="contained-button-file">
         <Input
-          accept=".ox"
+          accept=".json"
           id="contained-button-file"
           multiple
           type="file"
