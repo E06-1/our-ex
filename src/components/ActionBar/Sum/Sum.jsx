@@ -1,24 +1,37 @@
 import Button from "@mui/material/Button";
 import { useSelector } from "react-redux";
-import { selectSelectedCells } from "../../../features/selected/selectedSlice";
+import {
+  selectFocusedCell,
+  selectSelectedCells,
+  selectIsSelecting,
+} from "../../../features/selected/selectedSlice";
 import { useAppDispatch } from "../../../store";
 import { setCellContent } from "../../../features/table/tableSlice";
 import { useState, useEffect } from "react";
+import { startAdditionalSelection } from "../../../features/selected/selectedSlice";
+import { setCellContentWithRemeberedStyle } from "../../../features/thunkActions";
 
 export default function Sum() {
   const dispatch = useAppDispatch();
-  const selectedCells = useSelector(selectSelectedCells("current"));
-
+  const selectedCells = useSelector(selectSelectedCells("additional"));
+  const isSelecting = useSelector(selectIsSelecting("additional"));
+  const focusedCell = useSelector(selectFocusedCell);
   const [resultCell, setResultCell] = useState(null);
 
   //setting SUM button to wait till selected cells will be chosen
-  const [waitingForSelection, setWaitingForSelection] = useState(false);
 
   //updating Sum Value
   const [sumValue, SetSumValue] = useState(null);
 
   useEffect(() => {
-    if (!waitingForSelection) return;
+    if (!isSelecting) {
+      setResultCell(null);
+      SetSumValue(null);
+    }
+  }, [isSelecting]);
+
+  useEffect(() => {
+    if (!isSelecting) return;
 
     //
     if (Object.keys(selectedCells).includes(resultCell)) return;
@@ -35,24 +48,27 @@ export default function Sum() {
 
     //getting summing up all values and updating the state
     SetSumValue(onlyNumValues.reduce((a, b) => a + b, 0));
-  }, [selectedCells, waitingForSelection, resultCell]);
+  }, [selectedCells, isSelecting, resultCell]);
 
   useEffect(() => {
     if (!sumValue) return;
-
+    
     //setting in resultCell => content: SumValue
-    dispatch(setCellContent({ cellname: resultCell, content: sumValue }));
+    dispatch(setCellContentWithRemeberedStyle({ cellname: resultCell, content: sumValue }));
   }, [sumValue, dispatch, resultCell]);
 
   return (
-    <Button
-      onClick={() => {
-        setResultCell(Object.keys(selectedCells)[0]);
-        setWaitingForSelection(true);
-      }}
-      variant="contained"
-    >
-      Sum
-    </Button>
+    <div>
+      <Button
+        onClick={() => {
+          setResultCell(focusedCell);
+          dispatch(startAdditionalSelection());
+        }}
+        variant="contained"
+        color="success"
+      >
+        Sum
+      </Button>
+    </div>
   );
 }

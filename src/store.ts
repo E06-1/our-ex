@@ -1,18 +1,18 @@
-import { AnyAction, configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import tableReducer, {
-  initialCellState,
-  initialState,
 } from "./features/table/tableSlice";
 import selectedReducer from "./features/selected/selectedSlice";
-import undoable, { StateWithHistory, excludeAction } from "redux-undo";
-import type { Table } from "./features/table/tableSlice";
-import { Reducer } from "react";
+import styleReducer from "./features/style/styleSlice";
+import undoable, { excludeAction } from "redux-undo";
+import searchSlice from "./features/search/searchSlice";
 
 export const store = configureStore({
   reducer: {
-    table:undoable(tableReducer, {filter: excludeAction("table/init")}),
+    table: undoable(tableReducer, { filter: excludeAction("table/init") }),
     selected: selectedReducer,
+    style: styleReducer,
+    search: searchSlice,
   },
 });
 

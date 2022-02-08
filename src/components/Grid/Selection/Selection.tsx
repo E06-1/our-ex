@@ -2,20 +2,16 @@ import React, {
   useState,
   useLayoutEffect,
   useEffect,
-  KeyboardEventHandler,
 } from "react";
 import { useSelector } from "react-redux";
 import {
-  selectIsSelecting,
   selectRefreshSelection,
   selectSelectedCellNames,
   selectSelectionCorner,
   selectSelectionStart,
 } from "../../../features/selected/selectedSlice";
 import {
-  CellName,
   deleteCellContent,
-  setCellContent,
 } from "../../../features/table/tableSlice";
 import { useAppDispatch } from "../../../store";
 

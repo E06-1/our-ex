@@ -1,23 +1,20 @@
 import { textAlign } from "@mui/system";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { selectIsSearchResult } from "../../../features/search/searchSlice";
 import {
   endSelection,
   refreshSelection,
   selectIsEditable,
   selectIsSelected,
-  selectIsSelecting,
   setEditableCell,
   setFocusedCell,
   setSelectionCorner,
   setSelectionStart,
   startSelection,
 } from "../../../features/selected/selectedSlice";
-import {
-  CellName,
-  selectCell,
-  setCellContent,
-} from "../../../features/table/tableSlice";
+import { CellName, selectCell } from "../../../features/table/tableSlice";
+import { setCellContentWithRemeberedStyle } from "../../../features/thunkActions";
 import { store, useAppDispatch } from "../../../store";
 import "./Cell.css";
 
@@ -33,42 +30,59 @@ export default React.forwardRef<
 
   const cellstate = useSelector(selectCell(cellname));
   const isEditable = useSelector(selectIsEditable(cellname));
+  const isSearchResult = useSelector(selectIsSearchResult(cellname))
   const dispatch = useAppDispatch();
+
+  const [rememberedStyle, setRememberedStyle] = useState<React.CSSProperties>(
+    {}
+  );
 
   useEffect(() => {
     if (!ref.current) return;
     if (ref.current.innerText !== cellstate.content)
-      dispatch(setCellContent({ cellname, content: ref.current.innerText }));
+      dispatch(
+        setCellContentWithRemeberedStyle({
+          cellname,
+          content: ref.current.innerText,
+        })
+      );
   }, [cellname, cellstate.content, dispatch, isEditable]);
 
   useEffect(() => {
     if (isEditable) {
-      if (!ref.current) return;      
-      setCaret(ref.current)
+      if (!ref.current) return;
+      setRememberedStyle(store.getState().style);
+      setCaret(ref.current);
+    } else {
+      setRememberedStyle({});
     }
-  }, [isEditable]);
+  }, [isEditable, cellstate]);
 
   const handleKeyDown: React.KeyboardEventHandler<HTMLDivElement> = (e) => {
-
-    if(e.key.length === 1 && !isEditable){
-      dispatch(setEditableCell(cellname))
+    if (e.key.length === 1 && !isEditable) {
+      dispatch(setEditableCell(cellname));
     }
   };
 
+  const style: React.CSSProperties = {
+    border: "1px solid lightgray",
+    ...rememberedStyle,
+    ...cellstate.style,
+    overflow: "visible",
+    userSelect: isEditable ? "text" : "none",
+    outline: "none",
+    display: "flex",
+    justifyContent: "center",
+    flexDirection: "column",
+  }
+
+  if(isSearchResult) style.backgroundColor = "yellow";
+  
   return (
     <div
       id={cellname}
       className="Cell"
-      style={{
-        border: "1px solid lightgray",
-        ...cellstate.style,
-        overflow: "visible",
-        userSelect: isEditable ? "text" : "none",
-        outline: "none",
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
+      style={style}
       onDoubleClick={() => {
         dispatch(setEditableCell(cellname));
       }}
@@ -127,13 +141,16 @@ export default React.forwardRef<
 });
 
 function setCaret(element: HTMLElement) {
-  const nodes = element.childNodes
+  const nodes = element.childNodes;
   if (nodes.length === 0) element.innerText = " ";
   const range = document.createRange();
   const selection = window.getSelection();
 
   range.setStart(nodes[0], 0);
-  range.setEnd(nodes[0], nodes[0].textContent?.length ? nodes[0].textContent?.length : 0)
+  range.setEnd(
+    nodes[0],
+    nodes[0].textContent?.length ? nodes[0].textContent?.length : 0
+  );
   selection?.removeAllRanges();
   selection?.addRange(range);
   element.focus();

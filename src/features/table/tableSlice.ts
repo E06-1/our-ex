@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import React, { Reducer } from "react";
-import { act } from "react-dom/test-utils";
-import type { RootState } from "../../store";
+import { RootState } from "../../store";
+import { selectStyle } from "../style/styleSlice";
 
 // Define a type for the slice state
 export interface Table {
@@ -58,8 +58,19 @@ export const tableSlice = createSlice({
         if (Object.keys(state[action.payload].style).length === 0) {
           delete state[action.payload];
         } else {
-        state[action.payload].content = "";}
+          state[action.payload].content = "";
+        }
       }
+    },
+    setCell: (
+      state,
+      action: PayloadAction<{ cellname: CellName; content: string, style: React.CSSProperties }>
+    ) => {
+      if (!state[action.payload.cellname])
+        state[action.payload.cellname] = { ...initialCellState };
+
+      state[action.payload.cellname].content = action.payload.content;
+      state[action.payload.cellname].style = {...state[action.payload.cellname].style,...action.payload.style}
     },
     setCellContent: (
       state,
@@ -121,9 +132,9 @@ export const {
   overwrite,
   setCellStyle,
   mergeCellStyle,
-  setCellContent,
   reset,
   deleteCellContent,
+  setCellContent,
 } = tableSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

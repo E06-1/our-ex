@@ -2,12 +2,12 @@ export const isTable = (ob) => {
   //
   if (typeof ob !== "object") return false;
   if (ob === null) return false;
+
+  //covert all keys to array and check if first and second index is a number
   const keys = Object.keys(ob);
 
   for (let key of keys) {
     const splittedKeys = key.split(",");
-
-    //covert all keys to array and check if first and second index is a number
     if (
       Number.isNaN(parseInt(splittedKeys[0])) ||
       Number.isNaN(parseInt(splittedKeys[1]))
