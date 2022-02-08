@@ -39,23 +39,15 @@ const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
 }));
 
 export default function TextAlignColor() {
-
   const dispatch = useAppDispatch();
   const selected = useSelector(selectSelectedCellNames("current"));
 
-
   const [alignment, setAlignment] = React.useState("left");
-  const [formats, setFormats] = React.useState(() => ["italic"]);
-
-  const handleFormat = (event, newFormats) => {
-    setFormats(newFormats);
-
-   
-    
-  
-
-
-  };
+  const [fontWeight, setFontWeight] = React.useState(false);
+  const [fontStyle, setFontStyle] = React.useState(false);
+  const [textDecoration, setTextDecoration] = React.useState(false);
+  const [fontColor, setFontColor] = React.useState("red");
+  const [background, setBackground] = React.useState("white");
 
   const handleAlignment = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -63,10 +55,87 @@ export default function TextAlignColor() {
     dispatch(
       mergeCellStyle({
         cellname: selected,
-        style: {textAlign: `${newAlignment}` }
+        style: { textAlign: `${newAlignment}` },
       })
     );
+  };
 
+  const handleFontWeight = () => {
+    setFontWeight(!fontWeight);
+
+    if (fontWeight === false) {
+      dispatch(
+        mergeCellStyle({
+          cellname: selected,
+          style: { fontWeight: "normal" },
+        })
+      );
+    } else if (fontWeight === true) {
+      dispatch(
+        mergeCellStyle({
+          cellname: selected,
+          style: { fontWeight: "bold" },
+        })
+      );
+    }
+  };
+
+  const handleFontStyle = () => {
+    setFontStyle(!fontStyle);
+
+    if (fontStyle === false) {
+      dispatch(
+        mergeCellStyle({
+          cellname: selected,
+          style: { fontStyle: "normal" },
+        })
+      );
+    } else if (fontStyle === true) {
+      dispatch(
+        mergeCellStyle({
+          cellname: selected,
+          style: { fontStyle: "italic" },
+        })
+      );
+    }
+  };
+
+  const handleTextDecoration = () => {
+    setTextDecoration(!textDecoration);
+
+    if (textDecoration === false) {
+      dispatch(
+        mergeCellStyle({
+          cellname: selected,
+          style: { textDecoration: "none" },
+        })
+      );
+    } else if (textDecoration === true) {
+      dispatch(
+        mergeCellStyle({
+          cellname: selected,
+          style: { textDecoration: "underline" },
+        })
+      );
+    }
+  };
+
+  const handleColor = () => {
+    dispatch(
+      mergeCellStyle({
+        cellname: selected,
+        style: { color: fontColor },
+      })
+    );
+  };
+
+  const handleBackgroundColor = () => {
+    dispatch(
+      mergeCellStyle({
+        cellname: selected,
+        style: { backgroundColor: background },
+      })
+    );
   };
 
   return (
@@ -102,26 +171,37 @@ export default function TextAlignColor() {
         <Divider flexItem orientation="vertical" sx={{ mx: 0.5, my: 1 }} />
         <StyledToggleButtonGroup
           size="small"
-          value={formats}
-          onChange={handleFormat}
+          value={(fontWeight, fontStyle, textDecoration)}
           aria-label="text formatting"
         >
-          <ToggleButton value={{fontWeight: "bold" }} aria-label="bold">
+          <ToggleButton
+            onClick={handleFontWeight}
+            value={"bold"}
+            aria-label="bold"
+          >
             <FormatBoldIcon />
           </ToggleButton>
-          <ToggleButton value={{fontStyle: "italic"}} aria-label="italic">
+          <ToggleButton
+            onClick={handleFontStyle}
+            value={"italic"}
+            aria-label="italic"
+          >
             <FormatItalicIcon />
           </ToggleButton>
-          <ToggleButton value={{textDecoration: "underlined"}} aria-label="underlined">
+          <ToggleButton
+            onClick={handleTextDecoration}
+            value={"underlined"}
+            aria-label="underlined"
+          >
             <FormatUnderlinedIcon />
           </ToggleButton>
-          <ToggleButton value="color" aria-label="color">
+          <ToggleButton onClick={handleBackgroundColor} value="color" aria-label="color">
             <FormatColorFillIcon />
-            <SketchExample />
+            <SketchExample onChange={(color) => setBackground(`rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`)} />
           </ToggleButton>
-          <ToggleButton value="color" aria-label="color">
+          <ToggleButton onClick={handleColor} value="color" aria-label="color">
             <FormatColorTextIcon />
-            <SketchExample />
+            <SketchExample onChange={(color) => setFontColor(`rgba(${color.r}, ${color.g}, ${color.b}, ${color.a})`)} />
           </ToggleButton>
         </StyledToggleButtonGroup>
       </Paper>
