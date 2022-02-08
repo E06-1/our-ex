@@ -10,6 +10,7 @@ import { useAppDispatch } from "../../../store";
 import { mergeCellStyle } from "../../../features/table/tableSlice";
 
 import "./Font.css";
+import { rememberStyle } from "../../../features/style/styleSlice";
 
 export default function Font() {
   const dispatch = useAppDispatch();
@@ -27,6 +28,7 @@ export default function Font() {
         style: { fontSize: `${event.target.value}px` },
       })
     );
+    dispatch(rememberStyle({ fontSize: `${event.target.value}px` }))
   };
 
   const handleFontFamily = (event: SelectChangeEvent) => {
@@ -38,6 +40,7 @@ export default function Font() {
         style: { fontFamily: `${event.target.value}` },
       })
     );
+    dispatch(rememberStyle({ fontFamily: `${event.target.value}` }))
   };
 
   return (

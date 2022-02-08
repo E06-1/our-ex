@@ -2,7 +2,6 @@ import React, {
   useState,
   useLayoutEffect,
   useEffect,
-  KeyboardEventHandler,
 } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -12,9 +11,7 @@ import {
   selectSelectionStart,
 } from "../../../features/selected/selectedSlice";
 import {
-  CellName,
   deleteCellContent,
-  setCellContent,
 } from "../../../features/table/tableSlice";
 import { useAppDispatch } from "../../../store";
 
