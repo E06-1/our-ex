@@ -25,7 +25,7 @@ export default function Save() {
           // onClick={(e) => (e.target.href = "./data.ox")}
         >
           {" "}
-          <Button variant="contained" component="span">
+          <Button variant="outlined" color="secondary" component="span">
             Save <SaveIcon />
           </Button>
         </a>

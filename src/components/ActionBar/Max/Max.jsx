@@ -11,11 +11,13 @@ import { useState, useEffect } from "react";
 import { startAdditionalSelection } from "../../../features/selected/selectedSlice";
 
 // 1. When Max is clicked determine and save in local state the currently selected Cell (firstSelected)
-// 2. When the selection changes calculate the max value and dispatch(setCellContent({cellname: firstSelected, content: getMax}))
+// 2. When the key event handled, calculate the max value and dispatch(setCellContent({cellname: resultCell, content: maxValue }))
 
 export default function Max() {
   const dispatch = useAppDispatch();
+
   const selectedCells = useSelector(selectSelectedCells("additional"));
+
   const focusedCell = useSelector(selectFocusedCell);
 
   const isSelecting = useSelector(selectIsSelecting("additional"));
@@ -25,6 +27,14 @@ export default function Max() {
 
   //updating Max Value
   const [maxValue, SetMaxValue] = useState(null);
+
+  //resetting values if not selected
+  useEffect(() => {
+    if (!isSelecting) {
+      setResultCell(null);
+      SetMaxValue(null);
+    }
+  }, [isSelecting]);
 
   useEffect(() => {
     if (!isSelecting) return;
@@ -36,12 +46,9 @@ export default function Max() {
     //Only number array of selected cells
     const onlyNumValues = values.filter((item) => !Number.isNaN(item));
 
-    //console.log("values are", onlyNumValues);
     if (onlyNumValues.length === 0) return;
     //getting max value
     SetMaxValue(Math.max(...onlyNumValues));
-    console.log("num values", onlyNumValues);
-    console.log("max value", Math.max(...onlyNumValues));
   }, [selectedCells, isSelecting]);
 
   useEffect(() => {
@@ -58,16 +65,9 @@ export default function Max() {
         dispatch(startAdditionalSelection());
       }}
       variant="contained"
+      color="success"
     >
       Max
     </Button>
   );
 }
-
-/* function isSameSelection(selection1, selection2) {
-  const joinedSelection = { ...selection1, ...selection2 };
-  return (
-    Object.keys(selection1).length === Object.keys(selection2).length &&
-    Object.keys(selection2).length === Object.keys(joinedSelection).length
-  );
-} */

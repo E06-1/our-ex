@@ -33,7 +33,7 @@ export default function UploadButtons() {
           type="file"
           onInput={inputHandler}
         />
-        <Button variant="contained" component="span">
+        <Button variant="outlined" component="span">
           Load <DriveFolderUploadIcon />
         </Button>
       </label>

@@ -23,6 +23,13 @@ export default function Sum() {
   const [sumValue, SetSumValue] = useState(null);
 
   useEffect(() => {
+    if (!isSelecting) {
+      setResultCell(null);
+      SetSumValue(null);
+    }
+  }, [isSelecting]);
+
+  useEffect(() => {
     if (!isSelecting) return;
 
     //
@@ -56,6 +63,7 @@ export default function Sum() {
         dispatch(startAdditionalSelection());
       }}
       variant="contained"
+      color="success"
     >
       Sum
     </Button>

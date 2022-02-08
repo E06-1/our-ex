@@ -27,6 +27,13 @@ export default function Min() {
   const [minValue, SetMinValue] = useState(null);
 
   useEffect(() => {
+    if (!isSelecting) {
+      setResultCell(null);
+      SetMinValue(null);
+    }
+  }, [isSelecting]);
+
+  useEffect(() => {
     if (!isSelecting) return;
 
     // All values from selected cells
@@ -55,6 +62,7 @@ export default function Min() {
         dispatch(startAdditionalSelection());
       }}
       variant="contained"
+      color="success"
     >
       Min
     </Button>

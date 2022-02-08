@@ -4,6 +4,7 @@ import "./EditingBar.css";
 import Font from "./Font/Font";
 import TextAlignColor from "./TextAlignColor/TextAlignColor";
 import Search from '../Search/Search'
+
 export default function EditingBar() {
 
     return (
@@ -13,6 +14,7 @@ export default function EditingBar() {
             <Font />
             <TextAlignColor/>
             <Search/>
+          
         </div>
     )
 
