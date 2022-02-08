@@ -2,11 +2,13 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../store";
 import { CellName } from "../table/tableSlice";
 
+
+
 // Define the initial state using that type
 export const initialState: CellName[] = [];
 
 export const searchSlice = createSlice({
-  name: "style",
+  name: "search",
   // `tableSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
