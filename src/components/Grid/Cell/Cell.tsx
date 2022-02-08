@@ -61,15 +61,15 @@ export default React.forwardRef<
       dispatch(setEditableCell(cellname));
     }
   };
-
+  
   return (
     <div
       id={cellname}
       className="Cell"
       style={{
         border: "1px solid lightgray",
-        ...cellstate.style,
         ...rememberedStyle,
+        ...cellstate.style,
         overflow: "visible",
         userSelect: isEditable ? "text" : "none",
         outline: "none",

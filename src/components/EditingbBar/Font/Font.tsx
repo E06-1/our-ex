@@ -28,6 +28,7 @@ export default function Font() {
         style: { fontSize: `${event.target.value}px` },
       })
     );
+    dispatch(rememberStyle({ fontSize: `${event.target.value}px` }))
   };
 
   const handleFontFamily = (event: SelectChangeEvent) => {

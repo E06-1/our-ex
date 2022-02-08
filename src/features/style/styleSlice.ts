@@ -10,14 +10,17 @@ export const styleSlice = createSlice({
   // `tableSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-      reset: () => initialState,
-      rememberStyle: (state, action: PayloadAction<React.CSSProperties>) => ({...state, ...action.payload})
-}});
+    reset: () => initialState,
+    rememberStyle: (state, action: PayloadAction<React.CSSProperties>) => {
+      const newState = { ...state, ...action.payload };
+      return newState
+    },
+  },
+});
 
-export const {reset, rememberStyle
-} = styleSlice.actions;
+export const { reset, rememberStyle } = styleSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectStyle = (state: RootState) => state.style
+export const selectStyle = (state: RootState) => state.style;
 
 export default styleSlice.reducer;
