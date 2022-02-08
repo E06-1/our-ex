@@ -6,23 +6,27 @@ import {
   selectIsSelecting,
 } from "../../../features/selected/selectedSlice";
 import { useAppDispatch } from "../../../store";
-import { setCellContent } from "../../../features/table/tableSlice";
 import { useState, useEffect } from "react";
 import { startAdditionalSelection } from "../../../features/selected/selectedSlice";
 import { setCellContentWithRemeberedStyle } from "../../../features/thunkActions";
 
 export default function Sum() {
   const dispatch = useAppDispatch();
-  const selectedCells = useSelector(selectSelectedCells("additional"));
-  const isSelecting = useSelector(selectIsSelecting("additional"));
-  const focusedCell = useSelector(selectFocusedCell);
-  const [resultCell, setResultCell] = useState(null);
 
-  //setting SUM button to wait till selected cells will be chosen
+  //allows select multiple times and still receive result in a result cell
+  const selectedCells = useSelector(selectSelectedCells("additional"));
+
+  const isSelecting = useSelector(selectIsSelecting("additional"));
+
+  const focusedCell = useSelector(selectFocusedCell);
+
+  // setting where result will be calculated
+  const [resultCell, setResultCell] = useState(null);
 
   //updating Sum Value
   const [sumValue, SetSumValue] = useState(null);
 
+  //resetting values if not selected
   useEffect(() => {
     if (!isSelecting) {
       setResultCell(null);
@@ -33,7 +37,7 @@ export default function Sum() {
   useEffect(() => {
     if (!isSelecting) return;
 
-    //
+    //stop calculating if result sell is included in selected cells
     if (Object.keys(selectedCells).includes(resultCell)) return;
 
     // All values from selected cells
@@ -43,10 +47,10 @@ export default function Sum() {
     //Only number array of selected cells
     const onlyNumValues = values.filter((item) => !Number.isNaN(item));
 
-    // Checking if its not an empty array
+    // do nothing if no content in selected cells
     if (onlyNumValues.length === 0) return;
 
-    //getting summing up all values and updating the state
+    // summing up all values and updating the state
     SetSumValue(onlyNumValues.reduce((a, b) => a + b, 0));
   }, [selectedCells, isSelecting, resultCell]);
 

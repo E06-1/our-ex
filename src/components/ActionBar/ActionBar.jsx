@@ -5,7 +5,6 @@ import Sum from "./Sum/Sum";
 import "./ActionBar.css";
 import Random from "./Sort/Random";
 import SortDown from "./Sort/SortDown";
-import SortUp from "./Sort/SortUp";
 
 export default function ActionBar() {
   return (
@@ -15,7 +14,6 @@ export default function ActionBar() {
       <Min></Min>
       <Random />
       <SortDown />
-      <SortUp />
     </div>
   );
 }
