@@ -15,8 +15,8 @@ import {
 import {
   CellName,
   selectCell,
-  setCellContent,
 } from "../../../features/table/tableSlice";
+import { setCellContentWithRemeberedStyle } from "../../../features/thunkActions";
 import { store, useAppDispatch } from "../../../store";
 import "./Cell.css";
 
@@ -32,12 +32,12 @@ export default React.forwardRef<
 
   const cellstate = useSelector(selectCell(cellname));
   const isEditable = useSelector(selectIsEditable(cellname));
-  const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     if (!ref.current) return;
     if (ref.current.innerText !== cellstate.content)
-      dispatch(setCellContent({ cellname, content: ref.current.innerText }));
+      dispatch(setCellContentWithRemeberedStyle({ cellname, content: ref.current.innerText }));
   }, [cellname, cellstate.content, dispatch, isEditable]);
 
   useEffect(() => {

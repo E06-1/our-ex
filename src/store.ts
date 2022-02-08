@@ -5,6 +5,7 @@ import tableReducer, {
   initialState,
 } from "./features/table/tableSlice";
 import selectedReducer from "./features/selected/selectedSlice";
+import styleReducer from "./features/style/styleSlice";
 import undoable, { StateWithHistory, excludeAction } from "redux-undo";
 import type { Table } from "./features/table/tableSlice";
 import { Reducer } from "react";
@@ -13,6 +14,7 @@ export const store = configureStore({
   reducer: {
     table:undoable(tableReducer, {filter: excludeAction("table/init")}),
     selected: selectedReducer,
+    style: styleReducer
   },
 });
 

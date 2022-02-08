@@ -9,6 +9,7 @@ import { useAppDispatch } from "../../../store";
 import { setCellContent } from "../../../features/table/tableSlice";
 import { useState, useEffect } from "react";
 import { startAdditionalSelection } from "../../../features/selected/selectedSlice";
+import { setCellContentWithRemeberedStyle } from "../../../features/thunkActions";
 
 export default function Min() {
   const dispatch = useAppDispatch();
@@ -51,8 +52,9 @@ export default function Min() {
 
   useEffect(() => {
     if (!minValue) return;
+    
     //setting in resultCell => content: MinValue
-    dispatch(setCellContent({ cellname: resultCell, content: minValue }));
+    dispatch(setCellContentWithRemeberedStyle({ cellname: resultCell, content: minValue }));
   }, [minValue, dispatch, resultCell]);
 
   return (

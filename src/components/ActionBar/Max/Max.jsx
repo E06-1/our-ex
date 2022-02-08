@@ -9,6 +9,7 @@ import { useAppDispatch } from "../../../store";
 import { setCellContent } from "../../../features/table/tableSlice";
 import { useState, useEffect } from "react";
 import { startAdditionalSelection } from "../../../features/selected/selectedSlice";
+import { setCellContentWithRemeberedStyle } from "../../../features/thunkActions";
 
 // 1. When Max is clicked determine and save in local state the currently selected Cell (firstSelected)
 // 2. When the key event handled, calculate the max value and dispatch(setCellContent({cellname: resultCell, content: maxValue }))
@@ -53,9 +54,8 @@ export default function Max() {
 
   useEffect(() => {
     if (!maxValue) return;
-
     //setting in resultCell => content: MaxValue
-    dispatch(setCellContent({ cellname: resultCell, content: maxValue }));
+    dispatch(setCellContentWithRemeberedStyle({ cellname: resultCell, content: maxValue }));
   }, [maxValue, dispatch, resultCell]);
 
   return (

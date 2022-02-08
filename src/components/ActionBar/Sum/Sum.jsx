@@ -9,6 +9,7 @@ import { useAppDispatch } from "../../../store";
 import { setCellContent } from "../../../features/table/tableSlice";
 import { useState, useEffect } from "react";
 import { startAdditionalSelection } from "../../../features/selected/selectedSlice";
+import { setCellContentWithRemeberedStyle } from "../../../features/thunkActions";
 
 export default function Sum() {
   const dispatch = useAppDispatch();
@@ -51,9 +52,9 @@ export default function Sum() {
 
   useEffect(() => {
     if (!sumValue) return;
-
+    
     //setting in resultCell => content: SumValue
-    dispatch(setCellContent({ cellname: resultCell, content: sumValue }));
+    dispatch(setCellContentWithRemeberedStyle({ cellname: resultCell, content: sumValue }));
   }, [sumValue, dispatch, resultCell]);
 
   return (
