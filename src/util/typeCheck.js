@@ -1,37 +1,12 @@
-import { isCallChain } from "typescript";
-
-const object = {
-  "0,0": {
-    content: "1",
-    style: {
-      backgroundColor: "red",
-    },
-  },
-  "1,2": {
-    content: "1",
-    style: {
-      backgroundColor: "red",
-    },
-  },
-  "5,7": {
-    content: "1",
-    style: {
-      backgroundColor: "red",
-    },
-  },
-};
-
 export const isTable = (ob) => {
-  // get all the keys
+  //
   if (typeof ob !== "object") return false;
   if (ob === null) return false;
   const keys = Object.keys(ob);
-  console.log("getting keys", keys);
-  console.log("checking length", keys.length > 0);
 
   for (let key of keys) {
     const splittedKeys = key.split(",");
-    // console.log("splitted keys", splittedKeys);
+
     //covert all keys to array and check if first and second index is a number
     if (
       Number.isNaN(parseInt(splittedKeys[0])) ||
@@ -39,7 +14,7 @@ export const isTable = (ob) => {
     )
       return false;
     // call isCell with all values to check if they are cells
-    //if (!isCell(ob[key])) return false;
+    if (!isCell(ob[key])) return false;
   }
   return true;
 };
