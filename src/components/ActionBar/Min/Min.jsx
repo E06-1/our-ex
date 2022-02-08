@@ -6,27 +6,27 @@ import {
   selectIsSelecting,
 } from "../../../features/selected/selectedSlice";
 import { useAppDispatch } from "../../../store";
-import { setCellContent } from "../../../features/table/tableSlice";
 import { useState, useEffect } from "react";
 import { startAdditionalSelection } from "../../../features/selected/selectedSlice";
 import { setCellContentWithRemeberedStyle } from "../../../features/thunkActions";
 
 export default function Min() {
   const dispatch = useAppDispatch();
+
+  //allows select multiple times and still receive result in a result cell
   const selectedCells = useSelector(selectSelectedCells("additional"));
+
   const focusedCell = useSelector(selectFocusedCell);
 
   const isSelecting = useSelector(selectIsSelecting("additional"));
-  // const getMin = (array) => Math.max(...array);
 
   // setting where result will be calculated
   const [resultCell, setResultCell] = useState(null);
 
-  //setting MIN button to wait till selected cells will be chosen
-
   //updating Min Value
   const [minValue, SetMinValue] = useState(null);
 
+  //resetting values if not selected
   useEffect(() => {
     if (!isSelecting) {
       setResultCell(null);
@@ -44,17 +44,23 @@ export default function Min() {
     //Only number array of selected cells
     const onlyNumValues = values.filter((item) => !Number.isNaN(item));
 
-    // Checking if its not an empty array
+    // do nothing if no content in selected cells
     if (onlyNumValues.length === 0) return;
+
     //getting min value
     SetMinValue(Math.min(...onlyNumValues));
   }, [selectedCells, isSelecting]);
 
   useEffect(() => {
     if (!minValue) return;
-    
+
     //setting in resultCell => content: MinValue
-    dispatch(setCellContentWithRemeberedStyle({ cellname: resultCell, content: minValue }));
+    dispatch(
+      setCellContentWithRemeberedStyle({
+        cellname: resultCell,
+        content: minValue,
+      })
+    );
   }, [minValue, dispatch, resultCell]);
 
   return (
