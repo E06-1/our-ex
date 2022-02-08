@@ -74,13 +74,23 @@ export const tableSlice = createSlice({
     },
     setCellContent: (
       state,
-      action: PayloadAction<{ cellname: CellName; content: string }>
+      action: PayloadAction<{ cellname: CellName; content: string }[] |{ cellname: CellName; content: string }>
     ) => {
+      if (Array.isArray(action.payload)){
+       action.payload.forEach(payload => {
+        if (!state[payload.cellname])
+        state[payload.cellname] = { ...initialCellState };
+
+      state[payload.cellname].content = payload.content
+       } ) 
+
+        }
+      else {
       if (!state[action.payload.cellname])
         state[action.payload.cellname] = { ...initialCellState };
 
       state[action.payload.cellname].content = action.payload.content;
-    },
+    }},
     setCellStyle: (
       state,
       action: PayloadAction<{ cellname: CellName; style: React.CSSProperties }>

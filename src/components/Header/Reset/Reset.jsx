@@ -7,8 +7,14 @@ export default function Reset() {
   const dispatch = useAppDispatch();
 
   return (
-    <Button color="error" variant="outlined" onClick={() => dispatch(reset())}>
-      Reset <RestartAltIcon />{" "}
-    </Button>
+    <div>
+      <Button
+        color="error"
+        variant="outlined"
+        onClick={() => dispatch(reset())}
+      >
+        Reset <RestartAltIcon />{" "}
+      </Button>
+    </div>
   );
 }
