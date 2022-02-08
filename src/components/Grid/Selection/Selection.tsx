@@ -67,7 +67,7 @@ function Selection({ selectionRef, type, style}: SelectionProps) {
           ? cornerDiv.offsetLeft + cornerDiv.offsetWidth - startDiv.offsetLeft
           : startDiv.offsetLeft + startDiv.offsetWidth - offset.left,
     });
-  }, [selectionStart, selectionCorner, selectionRef, refresh]);
+  }, [selectionStart, selectionCorner, selectionRef, refresh, type]);
 
   useEffect(() => {
     const handleKeyDown = (e: Event) => {
