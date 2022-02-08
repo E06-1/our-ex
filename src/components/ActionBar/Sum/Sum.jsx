@@ -52,9 +52,14 @@ export default function Sum() {
 
   useEffect(() => {
     if (!sumValue) return;
-    
+
     //setting in resultCell => content: SumValue
-    dispatch(setCellContentWithRemeberedStyle({ cellname: resultCell, content: sumValue }));
+    dispatch(
+      setCellContentWithRemeberedStyle({
+        cellname: resultCell,
+        content: sumValue,
+      })
+    );
   }, [sumValue, dispatch, resultCell]);
 
   return (

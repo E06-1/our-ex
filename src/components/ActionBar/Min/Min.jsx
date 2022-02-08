@@ -52,9 +52,14 @@ export default function Min() {
 
   useEffect(() => {
     if (!minValue) return;
-    
+
     //setting in resultCell => content: MinValue
-    dispatch(setCellContentWithRemeberedStyle({ cellname: resultCell, content: minValue }));
+    dispatch(
+      setCellContentWithRemeberedStyle({
+        cellname: resultCell,
+        content: minValue,
+      })
+    );
   }, [minValue, dispatch, resultCell]);
 
   return (
