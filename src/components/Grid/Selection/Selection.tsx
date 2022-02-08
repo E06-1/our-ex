@@ -6,7 +6,6 @@ import React, {
 } from "react";
 import { useSelector } from "react-redux";
 import {
-  selectIsSelecting,
   selectRefreshSelection,
   selectSelectedCellNames,
   selectSelectionCorner,

@@ -1,25 +1,33 @@
 import Button from "@mui/material/Button";
 import { useSelector } from "react-redux";
-import { selectSelectedCells } from "../../../features/selected/selectedSlice";
+import {
+  selectFocusedCell,
+  selectSelectedCells,
+  selectIsSelecting,
+} from "../../../features/selected/selectedSlice";
 import { useAppDispatch } from "../../../store";
 import { setCellContent } from "../../../features/table/tableSlice";
 import { useState, useEffect } from "react";
+import { startAdditionalSelection } from "../../../features/selected/selectedSlice";
+
 export default function Min() {
   const dispatch = useAppDispatch();
-  const selectedCells = useSelector(selectSelectedCells("current"));
+  const selectedCells = useSelector(selectSelectedCells("additional"));
+  const focusedCell = useSelector(selectFocusedCell);
+
+  const isSelecting = useSelector(selectIsSelecting("additional"));
   // const getMin = (array) => Math.max(...array);
 
   // setting where result will be calculated
   const [resultCell, setResultCell] = useState(null);
 
   //setting MIN button to wait till selected cells will be chosen
-  const [waitingForSelection, setWaitingForSelection] = useState(false);
 
   //updating Min Value
   const [minValue, SetMinValue] = useState(null);
 
   useEffect(() => {
-    if (!waitingForSelection) return;
+    if (!isSelecting) return;
 
     // All values from selected cells
     const values = Object.values(selectedCells).map((value) =>
@@ -32,7 +40,7 @@ export default function Min() {
     if (onlyNumValues.length === 0) return;
     //getting min value
     SetMinValue(Math.min(...onlyNumValues));
-  }, [selectedCells, waitingForSelection]);
+  }, [selectedCells, isSelecting]);
 
   useEffect(() => {
     if (!minValue) return;
@@ -43,8 +51,8 @@ export default function Min() {
   return (
     <Button
       onClick={() => {
-        setResultCell(Object.keys(selectedCells)[0]);
-        setWaitingForSelection(true);
+        setResultCell(focusedCell);
+        dispatch(startAdditionalSelection());
       }}
       variant="contained"
     >

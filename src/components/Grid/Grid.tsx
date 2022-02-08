@@ -4,6 +4,9 @@ import Cell from "./Cell/Cell";
 import "./Grid.css";
 import Header from "./Header/Header";
 import Selection from "./Selection/Selection";
+import {useAppDispatch} from "../../store";
+import {stopAdditionalSelection} from "../../features/selected/selectedSlice"
+
 
 interface GridProps {
   rows: number;
@@ -11,11 +14,23 @@ interface GridProps {
 }
 
 function Grid({ rows, columns }: GridProps) {
+
   const [grid, setGrid] = useState<JSX.Element[]>([]);
   const selectionRef = useRef<{
     start: HTMLDivElement | null;
     corner: HTMLDivElement | null;
   }>({ start: null, corner: null });
+
+  const dispatch = useAppDispatch()
+  //Setting up Eventlisteners for ESC, TAB and Enter to end selection
+  useEffect(() => {
+    const handleEvent = () => {
+      dispatch(stopAdditionalSelection());
+    };
+    document.body.addEventListener("keydown", handleEvent);
+
+    return () => document.body.removeEventListener("keydown", handleEvent);
+  }, [dispatch]);
 
   //Generate Cellnames on initial Render
   useEffect(() => {

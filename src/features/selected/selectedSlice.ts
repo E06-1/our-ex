@@ -192,8 +192,8 @@ export const selectIsSelectionCorner =
   (cellname: CellName, type: "current" | "additional") => (state: RootState) =>
     state.selected[type].selectionCorner === cellname;
 
-export const selectIsSelecting = (state: RootState) =>
-  state.selected.isSelecting;
+export const selectIsSelecting = (type: "current" | "additional") => (state: RootState) => type === "current" ?
+  state.selected.isSelecting : state.selected.requiresAdditionalSelection
 
 export const selectSelectionStart =
   (type: "current" | "additional") => (state: RootState) =>
@@ -205,6 +205,9 @@ export const selectSelectionCorner =
 
 export const selectRefreshSelection = (state: RootState) =>
   state.selected.refresh;
+
+export const selectFocusedCell = (state: RootState) =>
+state.selected.focusedCell;
 
 //Determines Selection based on both corners
 function determineSelection(

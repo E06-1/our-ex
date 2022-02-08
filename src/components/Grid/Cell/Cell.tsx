@@ -6,7 +6,6 @@ import {
   refreshSelection,
   selectIsEditable,
   selectIsSelected,
-  selectIsSelecting,
   setEditableCell,
   setFocusedCell,
   setSelectionCorner,
