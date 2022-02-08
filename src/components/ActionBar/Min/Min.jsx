@@ -56,15 +56,17 @@ export default function Min() {
   }, [minValue, dispatch, resultCell]);
 
   return (
-    <Button
-      onClick={() => {
-        setResultCell(focusedCell);
-        dispatch(startAdditionalSelection());
-      }}
-      variant="contained"
-      color="success"
-    >
-      Min
-    </Button>
+    <div>
+      <Button
+        onClick={() => {
+          setResultCell(focusedCell);
+          dispatch(startAdditionalSelection());
+        }}
+        variant="contained"
+        color="success"
+      >
+        Min
+      </Button>
+    </div>
   );
 }
