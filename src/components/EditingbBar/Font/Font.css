@@ -1,12 +1,14 @@
-.fontBox{
-    width: 350px;
-    display: flex;
-    flex-direction: row;
-
+.fontBox {
+  width: 350px;
+  display: flex;
+  flex-direction: row;
 }
 
 .fontStyle {
-    width: 200px;
-
+  width: 200px;
+  height: 40px;
 }
 
+.fontSize {
+    height: 40px;
+}

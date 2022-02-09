@@ -4,6 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
+import "./UndoRedo.css";
 
 export default function UndoRedo() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -24,7 +25,7 @@ export default function UndoRedo() {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-      <UndoIcon />  
+      <UndoIcon className='undoIcon' />  
       </Button>
       <Menu
         id="basic-menu"

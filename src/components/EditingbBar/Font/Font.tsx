@@ -118,6 +118,7 @@ export default function Font() {
       </Select>
 
       <Select
+      className="fontSize"
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={size}

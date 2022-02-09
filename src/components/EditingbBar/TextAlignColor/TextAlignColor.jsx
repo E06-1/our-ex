@@ -22,6 +22,7 @@ import { useAppDispatch } from "../../../store";
 import { mergeCellStyle } from "../../../features/table/tableSlice";
 import { textAlign } from "@mui/system";
 
+
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
   "& .MuiToggleButtonGroup-grouped": {
     margin: theme.spacing(0.5),
@@ -46,7 +47,7 @@ export default function TextAlignColor() {
   const [fontWeight, setFontWeight] = React.useState(false);
   const [fontStyle, setFontStyle] = React.useState(false);
   const [textDecoration, setTextDecoration] = React.useState(false);
-  const [fontColor, setFontColor] = React.useState("red");
+  const [fontColor, setFontColor] = React.useState("black");
   const [background, setBackground] = React.useState("white");
 
   const handleAlignment = (event, newAlignment) => {
@@ -140,7 +141,7 @@ export default function TextAlignColor() {
 
   return (
     <div>
-      <Paper
+      <Paper className="formatBox"
         elevation={0}
         sx={{
           display: "flex",
