@@ -5,7 +5,7 @@ import { reset } from "../../../features/table/tableSlice";
 
 export default function Reset() {
   const dispatch = useAppDispatch();
-
+  // dispatching action:reset the whole table
   return (
     <div>
       <Button

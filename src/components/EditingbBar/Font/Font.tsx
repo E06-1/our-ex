@@ -44,6 +44,7 @@ export default function Font() {
   };
 
   return (
+    <div>
     <Box className="fontBox">
       <Select
         className="fontStyle"
@@ -139,5 +140,6 @@ export default function Font() {
         <MenuItem value={36}>36</MenuItem>
       </Select>
     </Box>
+    </div>
   );
 }
