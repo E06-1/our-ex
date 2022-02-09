@@ -8,11 +8,14 @@ function App() {
  
   return (
     <div className="App">
-      <header className="header" style={{position: "sticky", top:"0", backgroundColor: "white", zIndex: "1"}}>
+      <div style={{position: "sticky", top:"0", backgroundColor: "white", zIndex: "1"}}>
+        <header className="header" >
       <Header/>
       <ActionBar />
-        </header>  
-        <EditingBar />
+     
+      </header>  
+      <EditingBar />
+      </div>
       <Grid rows={100} columns={30} />
     </div>
   );
