@@ -23,7 +23,6 @@ export default function PositionedMenu() {
   const [normal, setNormal] = React.useState(false);
   const [bold, setBold] = React.useState(false);
   const [dotted, setDotted] = React.useState(false);
-  const [color, setColor] = React.useState("black");
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const open = Boolean(anchorEl);

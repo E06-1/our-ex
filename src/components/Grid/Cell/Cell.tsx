@@ -1,4 +1,3 @@
-import { textAlign } from "@mui/system";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectIsSearchResult } from "../../../features/search/searchSlice";
@@ -6,7 +5,6 @@ import {
   endSelection,
   refreshSelection,
   selectIsEditable,
-  selectIsSelected,
   setEditableCell,
   setFocusedCell,
   setSelectionCorner,

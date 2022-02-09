@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { table } from "console";
 import type { RootState } from "../../store";
 import { CellName, initialCellState, Table } from "../table/tableSlice";
 

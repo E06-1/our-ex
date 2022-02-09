@@ -8,7 +8,6 @@ import FormatBoldIcon from "@mui/icons-material/FormatBold";
 import FormatItalicIcon from "@mui/icons-material/FormatItalic";
 import FormatUnderlinedIcon from "@mui/icons-material/FormatUnderlined";
 import FormatColorFillIcon from "@mui/icons-material/FormatColorFill";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
 import ToggleButton from "@mui/material/ToggleButton";
@@ -20,7 +19,6 @@ import { selectSelectedCellNames } from "../../../features/selected/selectedSlic
 import { useSelector } from "react-redux";
 import { useAppDispatch } from "../../../store";
 import { mergeCellStyle } from "../../../features/table/tableSlice";
-import { textAlign } from "@mui/system";
 
 
 const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({

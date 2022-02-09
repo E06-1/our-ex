@@ -5,9 +5,6 @@ import Stack from "@mui/material/Stack";
 import "./Search.css";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
-
-import { initialState } from "../../features/search/searchSlice";
-import { RootState } from "../../store";
 import { selectPresentTable } from "../../features/table/tableSlice";
 import { useAppDispatch } from "../../store";
 import { setSearchResults } from "../../features/search/searchSlice";

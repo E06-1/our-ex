@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import React, { Reducer } from "react";
+import React from "react";
 import { RootState } from "../../store";
-import { selectStyle } from "../style/styleSlice";
 
 // Define a type for the slice state
 export interface Table {

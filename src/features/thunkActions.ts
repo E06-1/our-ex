@@ -1,7 +1,7 @@
 import { ThunkAction, AnyAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { selectStyle } from "./style/styleSlice";
-import { CellName,  setCellContent, mergeCellStyle } from "./table/tableSlice";
+import { CellName } from "./table/tableSlice";
 import { setCell } from "./table/tableSlice";
 
 
