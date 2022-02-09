@@ -143,6 +143,7 @@ export const {
   setCellStyle,
   mergeCellStyle,
   reset,
+  setCell,
   deleteCellContent,
   setCellContent,
 } = tableSlice.actions;
@@ -153,5 +154,6 @@ export const selectCell = (cellName: CellName) => (state: RootState) =>
     ? state.table.present[cellName]
     : initialCellState;
 export const selectPresentTable = (state: RootState) => state.table.present;
-
+export const selectPastTable = (state: RootState) => state.table.past;
+export const selectFutureTable = (state: RootState) => state.table.future;
 export default tableSlice.reducer;
